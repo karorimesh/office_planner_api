@@ -4,6 +4,7 @@ import javax.persistence.*;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 
+
 @Entity
 @Table(name = "meeting")
 
@@ -13,7 +14,7 @@ public class Meeting {
     private int meet_id;
     private String meet_name;
     private LocalDateTime meet_start;
-    private LocalDateTime meet_end;
+    private  LocalDateTime meet_end;
     private int capacity;
 
     public Meeting(int meet_id, String meet_name, LocalDateTime meet_start, LocalDateTime meet_end, int capacity) {

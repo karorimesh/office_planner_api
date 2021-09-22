@@ -12,7 +12,7 @@
     <artifactId>tracom</artifactId>
     <version>0.0.1-SNAPSHOT</version>
     <name>office_planner</name>
-    <description>Meeting Office Planner</description>
+    <description>Tracom Academy Project</description>
     <properties>
         <java.version>1.8</java.version>
     </properties>
@@ -21,12 +21,6 @@
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-data-jpa</artifactId>
         </dependency>
-        <dependency>
-            <groupId>org.springframework.security</groupId>
-            <artifactId>spring-security-core</artifactId>
-            <version>4.2.11.RELEASE</version>
-        </dependency>
-
 
         <dependency>
             <groupId>org.springframework.boot</groupId>
@@ -36,8 +30,16 @@
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-web</artifactId>
         </dependency>
-
-
+        <dependency>
+            <groupId>org.springframework.security</groupId>
+            <artifactId>spring-security-test</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.security</groupId>
+            <artifactId>spring-security-core</artifactId>
+            <version>5.5.1</version>
+        </dependency>
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-devtools</artifactId>
@@ -61,21 +63,6 @@
             <version>4.3.1</version>
         </dependency>
         <dependency>
-            <groupId>net.awired.bootstrap</groupId>
-            <artifactId>bootstrap</artifactId>
-            <version>1.0</version>
-        </dependency>
-        <dependency>
-            <groupId>org.webjars.bowergithub.bootstrap-vue</groupId>
-            <artifactId>bootstrap-vue</artifactId>
-            <version>2.0.0-rc.11</version>
-        </dependency>
-        <dependency>
-            <groupId>org.springframework.security</groupId>
-            <artifactId>spring-security-test</artifactId>
-            <version>4.2.11.RELEASE</version>
-        </dependency>
-        <dependency>
             <groupId>org.webjars</groupId>
             <artifactId>webjars-locator-core</artifactId>
         </dependency>
@@ -86,7 +73,6 @@
             <plugin>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
-                <version>${project.parent.version}</version>
             </plugin>
         </plugins>
     </build>
