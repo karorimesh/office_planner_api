@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Add User</title>
+    <link rel="stylesheet" type="text/css" href="/webjars/bootstrap/css/bootstrap.min.css"/>
+    <script type="text/javascript" src="/webjars/jquery/jquery.min.js"></script>
+    <script type="text/javascript" src="/webjars/bootstrap/js/bootstrap.min.js"></script>
+</head>
+<body>
+<div class="container text-center">
+    <h3>Create Meeting</h3>
+
+    <br/>
+    <br/>
+
+
+    <form th:action="@{/save_meet}" method="post"
+          style="max-width: 600px; margin: 0 auto;"
+          th:object="${meet}">
+        <div>
+            <div class="form-group row">
+                <label class="col-form-label col-4">Meeting</label>
+                <div class="col-8">
+                    <input  class="form-control" th:field="*{meet_name}" required/>
+                </div>
+            </div>
+
+
+            <div>
+                <div class="form-group row">
+                    <label class="col-form-label col-4">Meeting Start</label>
+                    <div class="col-8">
+                        <label for="meet_start">Start Time</label>
+                        <input type="datetime-local" id="meet_start" name="meet_start" th:field="*{meet_start}">
+                    </div>
+                </div>
+            </div>
+
+            <div>
+                <div class="form-group row">
+                    <label class="col-form-label col-4">Meeting End</label>
+                    <div class="col-8">
+                        <label for="meet_end">End Time</label>
+                        <input type="datetime-local" id="meet_end" name="meet_end" th:field="*{meet_end}">
+                    </div>
+                </div>
+            </div>
+
+            <div>
+                <div class="form-group row">
+                    <label class="col-form-label col-4">Capacity</label>
+                    <div class="col-8">
+                        <input type="number" class="form-control" th:field="*{capacity}" required minlength="8"
+                               maxlength="20" id="capacity"/>
+                    </div>
+                </div>
+            </div>
+<!--            <div>-->
+<!--                <div class="form-group row">-->
+<!--                    <label class="col-form-label col-4">Confirm Password:</label>-->
+<!--                    <div class="col-8">-->
+<!--                        <input type="password" class="form-control"  required minlength="8"-->
+<!--                               maxlength="20" id="cnfPassword"/>-->
+<!--                    </div>-->
+<!--                </div>-->
+<!--            </div>-->
+
+            <!--            <div>-->
+            <!--                <div class="form-group row">-->
+            <!--                    <label class="col-form-label col-4">Gender:</label>-->
+            <!--                    <div class="col-8">-->
+            <!--                        <input type="text" class="form-control" th:field="*{gender}" required minlength="2"-->
+            <!--                               maxlength="20"/>-->
+            <!--                    </div>-->
+            <!--                </div>-->
+            <!--            </div>-->
+
+            <!--            <div>-->
+            <!--                <div class="form-group row">-->
+            <!--                    <label class="col-form-label col-4">Phone:</label>-->
+            <!--                    <div class="col-8">-->
+            <!--                        <input type="text" class="form-control" th:field="*{phone}" required minlength="2"-->
+            <!--                               maxlength="20"/>-->
+            <!--                    </div>-->
+            <!--                </div>-->
+            <!--            </div>-->
+
+            <div>
+                <button type="submit" class="btn btn-primary">Create</button>
+            </div>
+        </div>
+    </form>
+
+</div>
+</body>
+</html>

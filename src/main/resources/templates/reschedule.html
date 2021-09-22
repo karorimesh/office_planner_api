@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Office Planner</title>
+    <link rel="stylesheet" type="text/css" href="/webjars/bootstrap/css/bootstrap.min.css"/>
+    <script type="text/javascript" src="/webjars/jquery/jquery.min.js"></script>
+    <script type="text/javascript" src="/webjars/bootstrap/js/bootstrap.min.js"></script>
+</head>
+<body>
+<div class="container text-center">
+    <h3>Reschedule</h3>
+
+    <br/>
+    <br/>
+
+
+    <form th:action="@{/save_meet}" method="post"
+          style="max-width: 600px; margin: 0 auto;"
+          th:object="${meet}">
+        <div>
+<!--            <div>-->
+<!--                <div class="form-group row">-->
+<!--                    <label class="col-form-label col-4">user Id:</label>-->
+<!--                    <div class="col-8">-->
+<!--                        <input type="email" class="form-control" th:field="*{user_id}" readonly/>-->
+<!--                    </div>-->
+<!--                </div>-->
+<!--            </div>-->
+
+
+<!--            <div>-->
+<!--                <div class="form-group row">-->
+<!--                    <label class="col-form-label col-4">Name:</label>-->
+<!--                    <div class="col-8">-->
+<!--                        <input type="text" class="form-control" th:field="*{user_name}" required minlength="2"-->
+<!--                               maxlength="20"/>-->
+<!--                    </div>-->
+<!--                </div>-->
+<!--            </div>-->
+
+<!--            <div>-->
+<!--                <div class="form-group row">-->
+<!--                    <label class="col-form-label col-4">Password:</label>-->
+<!--                    <div class="col-8">-->
+<!--                        <input type="password" class="form-control" th:field="*{user_password}" required minlength="8"-->
+<!--                               maxlength="20"/>-->
+<!--                    </div>-->
+<!--                </div>-->
+<!--            </div>-->
+
+<!--            <div>-->
+<!--                <div class="form-group row">-->
+<!--                    <label class="col-form-label col-4">Admin</label>-->
+<!--                    <div class="col-8">-->
+<!--                        <input type="radio" id="true" name="fav_language" value="true" th:field="*{user_admin}">-->
+<!--                          <label for="true">Admin</label><br>-->
+<!--                        <input type="radio" id="false" name="fav_language" value="false" th:field="*{user_admin}">-->
+<!--                          <label for="false">User</label><br>-->
+
+<!--                        &lt;!&ndash;                        <input type="text" class="form-control" th:field="*{user_admin}" required minlength="2"&ndash;&gt;-->
+<!--                        &lt;!&ndash;                               maxlength="20"/>&ndash;&gt;-->
+<!--                    </div>-->
+<!--                </div>-->
+<!--            </div>-->
+
+            <div>
+                <div class="form-group row">
+                    <label class="col-form-label col-4">Meeting Start</label>
+                    <div class="col-8">
+                        <label for="meet_start">Start Time</label>
+                        <input type="datetime-local" id="meet_start" name="meet_start" th:field="*{meet_start}">
+                    </div>
+                </div>
+            </div>
+
+            <div>
+                <div class="form-group row">
+                    <label class="col-form-label col-4">Meeting End</label>
+                    <div class="col-8">
+                        <label for="meet_end">End Time</label>
+                        <input type="datetime-local" id="meet_end" name="meet_end" th:field="*{meet_end}">
+                    </div>
+                </div>
+            </div>
+
+            <div>
+                <button type="submit" class="btn btn-primary">Save Changes</button>
+            </div>
+        </div>
+    </form>
+</div>
+</body>
+</html>
