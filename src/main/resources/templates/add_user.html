@@ -29,16 +29,31 @@
 
             <div>
                 <div class="form-group row">
-                    <label class="col-form-label col-4">Admin</label>
+                    <label class="col-form-label col-4">Role</label>
                     <div class="col-8">
-                        <input type="radio" id="true" name="fav_language" value="true" th:field="*{user_admin}">
-                          <label for="true">Admin</label><br>
-                        <input type="radio" id="false" name="fav_language" value="false" th:field="*{user_admin}">
-                          <label for="false">User</label><br>
+                        <input type="radio" id="admin" name="fav_language" value="admin" th:field="*{user_role}">
+                          <label for="admin">Admin</label><br>
+                        <input type="radio" id="officer" name="fav_language" value="officer" th:field="*{user_role}">
+                          <label for="officer">Officer</label><br>
+                        <input type="radio" id="Employee" name="fav_language" value="employee" th:field="*{user_role}">
+                          <label for="Employee">Employee</label><br>
 
 <!--                        <input type="text" class="form-control" th:field="*{user_admin}" required minlength="2"-->
 <!--                               maxlength="20"/>-->
+
+
                     </div>
+<!--                    <div>-->
+<!--                        <input type="radio" id="admin"-->
+<!--                               name="contact" value="admin" th:field="*{user_role}">-->
+<!--                        <label for="admin">Admin</label>-->
+<!--                        <input type="radio" id="officer"-->
+<!--                               name="officer" value="officer" th:field="*{user_role}">-->
+<!--                        <label for="officer">Officer</label>-->
+<!--                        <input type="radio" id="employee"-->
+<!--                               name="employee" value="employee" th:field="*{user_role}">-->
+<!--                        <label for="employee">Employee</label>-->
+<!--                    </div>-->
                 </div>
             </div>
 

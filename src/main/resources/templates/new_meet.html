@@ -29,10 +29,20 @@
 
             <div>
                 <div class="form-group row">
+                    <label class="col-form-label col-4">Meeting End</label>
+                    <div class="col-8">
+                        <label for="meet_end">Meeting Date</label>
+                        <input type="date" id="meet_date" name="meet_end" th:field="*{meet_date}">
+                    </div>
+                </div>
+            </div>
+
+            <div>
+                <div class="form-group row">
                     <label class="col-form-label col-4">Meeting Start</label>
                     <div class="col-8">
                         <label for="meet_start">Start Time</label>
-                        <input type="datetime-local" id="meet_start" name="meet_start" th:field="*{meet_start}">
+                        <input type="time" id="meet_start" name="meet_start" th:field="*{meet_start}">
                     </div>
                 </div>
             </div>
@@ -42,7 +52,7 @@
                     <label class="col-form-label col-4">Meeting End</label>
                     <div class="col-8">
                         <label for="meet_end">End Time</label>
-                        <input type="datetime-local" id="meet_end" name="meet_end" th:field="*{meet_end}">
+                        <input type="time" id="meet_end" name="meet_end" th:field="*{meet_end}">
                     </div>
                 </div>
             </div>

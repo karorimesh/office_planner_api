@@ -23,15 +23,15 @@
                 <th>User ID</th>
                 <th>Name</th>
                 <th>Password</th>
-                <th>Admin</th>
+                <th>Role</th>
             </tr>
             </thead>
             <tbody>
             <tr th:each="userRepo: ${userList}">
                 <td th:text="${userRepo.user_id}">User ID</td>
-                <td th:text="${userRepo.user_name}">E-mail</td>
+                <td th:text="${userRepo.user_name}">User Name</td>
                 <td th:text="${userRepo.user_password}">Password</td>
-                <td th:text="${userRepo.user_admin}">Admin</td>
+                <td th:text="${userRepo.user_role}">Role</td>
                 <td>
                     <a th:href="@{'/edit_user/' + ${userRepo.user_id}}"
                        onclick="return confirm('Are you sure you want to edit the User details?')">
