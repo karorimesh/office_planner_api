@@ -8,6 +8,8 @@ import com.tracom.office_planner.User.User;
 import lombok.*;
 
 import javax.persistence.*;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.Set;
 
 @Entity
@@ -20,26 +22,11 @@ import java.util.Set;
 @Setter
 public class Logs {
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int log_id;
-    @ManyToOne
-    private Organization organization;
-    @ManyToOne
-    private User user;
-    @OneToOne
-    private Meeting meeting;
-    @ManyToOne
-    private BoardRoom boardroom;
-    @OneToMany
-    private Set<Notifications> notifications;
+    private LocalDateTime logDate;
+    private String logger;
+    private String level;
+    private String message;
 
-    public Logs(Organization organization,
-                User user, Meeting meeting,
-                BoardRoom boardroom,
-                Set<Notifications> notifications) {
-        this.organization = organization;
-        this.user = user;
-        this.meeting = meeting;
-        this.boardroom = boardroom;
-        this.notifications = notifications;
-    }
 }

@@ -27,4 +27,13 @@ public class CoOwners {
         this.coOwnerPhone = coOwnerPhone;
         this.meeting = meeting;
     }
+
+    public CoOwners(int coOwner_id, String coOwner) {
+        this.coOwner_id = coOwner_id;
+        this.coOwner = coOwner;
+    }
+
+    public CoOwners(String coOwner) {
+        this.coOwner = coOwner;
+    }
 }

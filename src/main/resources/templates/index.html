@@ -1,5 +1,6 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org" lang="EN">
+<html xmlns:th="http://www.thymeleaf.org" lang="EN"
+      xmlns:sec="https://www.thymeleaf.org/thymeleaf-extras-springsecurity5">
 <head>
     <meta charset="ISO-8859-1">
     <title>Welcome </title>
@@ -12,15 +13,21 @@
     <script type="text/javascript" src="/webjars/bootstrap/js/bootstrap.min.js"></script>
 </head>
 <body>
-<div align="center">
+<div align="center" sec:authorize="isAuthenticated()">
 
     <h1>Office Planner</h1>
+    <h5>welcome <span sec:authentication="name">Username</span></h5>
+    <h5>You are an: <span sec:authentication="principal.authorities">Username</span></h5>
 
     <h3><a th:href="@{/list_users}">Users List</a></h3>
     <h3><a th:href="@{/add_user}">Add User</a></h3>
     <h3><a th:href="@{/meeting}">Meetings</a></h3>
     <h3><a th:href="@{/new_meet}">Schedule Meeting</a></h3>
-
+    <h3><a th:href="@{/new_board}">Create Boardroom</a></h3>
+    <h3><a href="javascript: document.logoutForm.submit()" class="btn btn-default btn-flat">Sign out</a></h3>
+    <form name="logoutForm" th:action="@{/logout}" method="post" th:hidden="true">
+        <input hidden type="submit" value="Sign Out"/>
+    </form>
 
 </div>
 </body>

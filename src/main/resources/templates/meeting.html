@@ -32,12 +32,12 @@
             <tr th:each="meetRepo: ${meet}">
                 <td th:text="${meetRepo.meet_id}">Meet ID</td>
                 <td th:text="${meetRepo.meet_name}">Name</td>
-                <td th:text="${meetRepo.meet_date}">Date</td>
+<!--                <td th:text="${meetRepo.repeatMeetings.get(meet_id).meet_date}">Date</td>-->
                 <td th:text="${meetRepo.meet_start}">Start</td>
                 <td th:text="${meetRepo.meet_end}">End</td>
                 <td th:text="${meetRepo.capacity}">Capacity</td>
                 <td>
-                    <a th:href="@{'/reschedule_meet/' + ${meetRepo.meet_id}}"
+                    <a th:href="@{'/reschedule/' + ${meetRepo.meet_id}}"
                        onclick="return confirm('Are you sure you want to edit the Meeting details?')">
                         <button style='font-size:16px;color:blue'>Edit <i class='fas fa-edit'></i></button>
                     </a></td>

@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Add User</title>
+    <link href="/webjars/bootstrap/4.3.1/css/bootstrap.min.css" rel="stylesheet" type="text/css"/>
+    <script src="/webjars/jquery/3.0.0/jquery.min.js" type="text/javascript"></script>
+    <script src="/webjars/bootstrap/4.3.1/js/bootstrap.min.js" type="text/javascript"></script>
+    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datetimepicker/4.17.47/css/bootstrap-datetimepicker.css"
+          rel="stylesheet">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.24.0/moment.min.js"></script>
+    <script
+            src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datetimepicker/4.17.47/js/bootstrap-datetimepicker.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.9.0/js/bootstrap-datepicker.min.js"></script>
+</head>
+
+<body>
+<div class="container text-center">
+    <h3>Create Meeting</h3>
+
+    <br/>
+    <br/>
+
+
+    <form method="post" style="max-width: 600px; margin: 0 auto;" th:action="@{/save_board}" th:object="${board}">
+        <div>
+            <div class="form-group row">
+                <label class="col-form-label col-4">Boardroom Name</label>
+                <div class="col-8">
+                    <input class="form-control" required th:field="*{board_name}"/>
+                </div>
+            </div>
+
+
+            <!--            <div>-->
+            <!--                <div class="form-group row">-->
+            <!--                    <label class="col-form-label col-4">Meeting End</label>-->
+            <!--                    <div class="col-8">-->
+            <!--                        <label for="meet_end">Meeting Date</label>-->
+            <!--                        <input type="date" id="meet_date" name="meet_end" th:value="${repeat.meet_date}">-->
+            <!--                    </div>-->
+            <!--                </div>-->
+            <!--            </div>-->
+
+<!--            <div>-->
+<!--                <div class="form-group row">-->
+<!--                    <label class="col-form-label col-4">Meeting Start</label>-->
+<!--                    <div class="col-8">-->
+<!--                        <label for="meet_start">Start Time</label>-->
+<!--                        <input id="meet_start" name="meet_start" th:field="*{meet_start}" type="time">-->
+<!--                    </div>-->
+<!--                </div>-->
+<!--            </div>-->
+
+<!--            <div>-->
+<!--                <div class="form-group row">-->
+<!--                    <label class="col-form-label col-4">Meeting End</label>-->
+<!--                    <div class="col-8">-->
+<!--                        <label for="meet_end">End Time</label>-->
+<!--                        <input id="meet_end" name="meet_end" th:field="*{meet_end}" type="time">-->
+<!--                    </div>-->
+<!--                </div>-->
+<!--            </div>-->
+
+<!--            <div>-->
+<!--                <div class="form-group row">-->
+<!--                    <label class="col-form-label col-4">Capacity</label>-->
+<!--                    <div class="col-8">-->
+<!--                        <input class="form-control" id="capacity" maxlength="20" minlength="8" required-->
+<!--                               th:field="*{capacity}" type="number"/>-->
+<!--                    </div>-->
+<!--                </div>-->
+<!--            </div>-->
+            <!--            <div>-->
+            <!--                <div class="form-group">-->
+            <!--                    <div class='input-group date' id='date-picker'>-->
+            <!--                        <input class="form-control" th:field="*{repeatMeetings}" type="text"/>-->
+            <!--                        <span class="input-group-addon">-->
+            <!--                                            <span class="glyphicon glyphicon-calendar"></span>-->
+            <!--                                        </span>-->
+            <!--                    </div>-->
+            <!--                </div>-->
+            <!--            </div>-->
+
+<!--            <div>-->
+<!--                <div class="form-group row">-->
+<!--                    <label class="col-form-label col-4">Co-Owners:</label>-->
+<!--                    <div class="col-8">-->
+<!--                        <input class="form-control" th:field="*{coOwners}" type="text"-->
+<!--                        />-->
+<!--                    </div>-->
+<!--                </div>-->
+
+
+
+
+<!--            </div>-->
+<!--            <div>-->
+<!--                <div class="form-group row">-->
+<!--                    <label class="col-form-label col-4">Date:</label>-->
+<!--                    <div class="col-8">-->
+<!--                        <input class="form-control" th:field="*{repeatMeetings}" type="text"-->
+<!--                        />-->
+<!--                    </div>-->
+<!--                </div>-->
+<!--            </div>-->
+
+            <!--            <div>-->
+            <!--                <div class="form-group row">-->
+            <!--                    <label class="col-form-label col-4">Confirm Password:</label>-->
+            <!--                    <div class="col-8">-->
+            <!--                        <input type="password" class="form-control"  required minlength="8"-->
+            <!--                               maxlength="20" id="cnfPassword"/>-->
+            <!--                    </div>-->
+            <!--                </div>-->
+            <!--            </div>-->
+
+
+            <div>
+                <button class="btn btn-primary" type="submit">Create</button>
+            </div>
+        </div>
+    </form>
+</div>
+<script type="text/javascript">
+    $(function () {
+        $('#date-picker').datepicker({
+            multidate: true,
+            format: 'dd-mm-yyyy'
+        });
+
+    });
+</script>
+</body>
+
+</html>

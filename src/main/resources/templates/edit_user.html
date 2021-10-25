@@ -2,14 +2,14 @@
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>Office Planner</title>
+    <title>Add User</title>
     <link rel="stylesheet" type="text/css" href="/webjars/bootstrap/css/bootstrap.min.css"/>
     <script type="text/javascript" src="/webjars/jquery/jquery.min.js"></script>
     <script type="text/javascript" src="/webjars/bootstrap/js/bootstrap.min.js"></script>
 </head>
 <body>
 <div class="container text-center">
-    <h3>Edit User</h3>
+    <h3>Edit</h3>
 
     <br/>
     <br/>
@@ -17,60 +17,100 @@
 
     <form th:action="@{/save_user}" method="post"
           style="max-width: 600px; margin: 0 auto;"
-          th:object="${user}">
-        <div>
-            <div>
-                <div class="form-group row">
-                    <label class="col-form-label col-4">user Id:</label>
-                    <div class="col-8">
-                        <input type="email" class="form-control" th:field="*{user_id}" readonly/>
-                    </div>
-                </div>
-            </div>
+          th:object="${profile}">
+
+        <input type="text" th:field ="*{user_name}">
+<!--        <div>-->
+<!--            <div class="form-group row">-->
+<!--                <label class="col-form-label col-4">Name</label>-->
+<!--                <div class="col-8">-->
+<!--                    <input  class="form-control" th:field="*{user_name}" readonly/>-->
+<!--                </div>-->
+<!--            </div>-->
+<!--            <div class="form-group row">-->
+<!--                <label class="col-form-label col-4">Email</label>-->
+<!--                <div class="col-8">-->
+<!--                    <input  class="form-control" th:field="*{user_email}" readonly/>-->
+<!--                </div>-->
+<!--            </div>-->
 
 
-            <div>
-                <div class="form-group row">
-                    <label class="col-form-label col-4">Name:</label>
-                    <div class="col-8">
-                        <input type="text" class="form-control" th:field="*{user_name}" required minlength="2"
-                               maxlength="20"/>
-                    </div>
-                </div>
-            </div>
+<!--            <div>-->
+<!--                <div class="form-group row">-->
+<!--                    <label class="col-form-label col-4">Role</label>-->
+<!--                    <div class="col-8">-->
+<!--                        <input type="radio" id="admin" name="fav_language" value="admin" th:field="*{user_role}" readonly>-->
+<!--                          <label for="admin">Admin</label><br>-->
+<!--                        <input type="radio" id="officer" name="fav_language" value="officer" th:field="*{user_role}" readonly>-->
+<!--                          <label for="officer">Officer</label><br>-->
+<!--                        <input type="radio" id="Employee" name="fav_language" value="employee" th:field="*{user_role}"readonly>-->
+<!--                          <label for="Employee">Employee</label><br>-->
 
-            <div>
-                <div class="form-group row">
-                    <label class="col-form-label col-4">Password:</label>
-                    <div class="col-8">
-                        <input type="password" class="form-control" th:field="*{user_password}" required minlength="8"
-                               maxlength="20"/>
-                    </div>
-                </div>
-            </div>
-
-            <div>
-                <div class="form-group row">
-                    <label class="col-form-label col-4">Admin</label>
-                    <div class="col-8">
-                        <input type="radio" id="true" name="fav_language" value="true" th:field="*{user_admin}">
-                          <label for="true">Admin</label><br>
-                        <input type="radio" id="false" name="fav_language" value="false" th:field="*{user_admin}">
-                          <label for="false">User</label><br>
-
-                        <!--                        <input type="text" class="form-control" th:field="*{user_admin}" required minlength="2"-->
-                        <!--                               maxlength="20"/>-->
-                    </div>
-                </div>
-            </div>
+<!--                        &lt;!&ndash;                        <input type="text" class="form-control" th:field="*{user_admin}" required minlength="2"&ndash;&gt;-->
+<!--                        &lt;!&ndash;                               maxlength="20"/>&ndash;&gt;-->
 
 
+<!--                    </div>-->
+<!--                    &lt;!&ndash;                    <div>&ndash;&gt;-->
+<!--                    &lt;!&ndash;                        <input type="radio" id="admin"&ndash;&gt;-->
+<!--                    &lt;!&ndash;                               name="contact" value="admin" th:field="*{user_role}">&ndash;&gt;-->
+<!--                    &lt;!&ndash;                        <label for="admin">Admin</label>&ndash;&gt;-->
+<!--                    &lt;!&ndash;                        <input type="radio" id="officer"&ndash;&gt;-->
+<!--                    &lt;!&ndash;                               name="officer" value="officer" th:field="*{user_role}">&ndash;&gt;-->
+<!--                    &lt;!&ndash;                        <label for="officer">Officer</label>&ndash;&gt;-->
+<!--                    &lt;!&ndash;                        <input type="radio" id="employee"&ndash;&gt;-->
+<!--                    &lt;!&ndash;                               name="employee" value="employee" th:field="*{user_role}">&ndash;&gt;-->
+<!--                    &lt;!&ndash;                        <label for="employee">Employee</label>&ndash;&gt;-->
+<!--                    &lt;!&ndash;                    </div>&ndash;&gt;-->
+<!--                </div>-->
+<!--            </div>-->
 
-            <div>
-                <button type="submit" class="btn btn-primary">Save Changes</button>
-            </div>
-        </div>
+<!--            <div>-->
+<!--                <div class="form-group row">-->
+<!--                    <label class="col-form-label col-4">Password:</label>-->
+<!--                    <div class="col-8">-->
+<!--                        <input type="password" class="form-control" th:field="*{user_password}" minlength="8"-->
+<!--                               maxlength="20" id="password" readonly/>-->
+<!--                    </div>-->
+<!--                </div>-->
+<!--            </div>-->
+
+<!--            &lt;!&ndash;            <div>&ndash;&gt;-->
+<!--            &lt;!&ndash;                <div class="form-group row">&ndash;&gt;-->
+<!--            &lt;!&ndash;                    <label class="col-form-label col-4">Gender:</label>&ndash;&gt;-->
+<!--            &lt;!&ndash;                    <div class="col-8">&ndash;&gt;-->
+<!--            &lt;!&ndash;                        <input type="text" class="form-control" th:field="*{gender}" required minlength="2"&ndash;&gt;-->
+<!--            &lt;!&ndash;                               maxlength="20"/>&ndash;&gt;-->
+<!--            &lt;!&ndash;                    </div>&ndash;&gt;-->
+<!--            &lt;!&ndash;                </div>&ndash;&gt;-->
+<!--            &lt;!&ndash;            </div>&ndash;&gt;-->
+
+<!--            &lt;!&ndash;            <div>&ndash;&gt;-->
+<!--            &lt;!&ndash;                <div class="form-group row">&ndash;&gt;-->
+<!--            &lt;!&ndash;                    <label class="col-form-label col-4">Phone:</label>&ndash;&gt;-->
+<!--            &lt;!&ndash;                    <div class="col-8">&ndash;&gt;-->
+<!--            &lt;!&ndash;                        <input type="text" class="form-control" th:field="*{phone}" required minlength="2"&ndash;&gt;-->
+<!--            &lt;!&ndash;                               maxlength="20"/>&ndash;&gt;-->
+<!--            &lt;!&ndash;                    </div>&ndash;&gt;-->
+<!--            &lt;!&ndash;                </div>&ndash;&gt;-->
+<!--            &lt;!&ndash;            </div>&ndash;&gt;-->
+
+<!--            <div>-->
+<!--                <button type="submit" class="btn btn-primary" onclick="validate()">Add User</button>-->
+<!--            </div>-->
+<!--        </div>-->
     </form>
+    <script type="text/javascript">
+        function validate() {
+            var password = document.getElementById("password").value;
+            var confirmPassword = document.getElementById("cnfPassword").value;
+            if (password != confirmPassword) {
+                alert("Passwords do not match.");
+                return false;
+            }
+            return true;
+        }
+    </script>
 </div>
 </body>
 </html>

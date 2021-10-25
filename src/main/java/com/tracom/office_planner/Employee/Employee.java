@@ -16,6 +16,7 @@ import javax.persistence.*;
 @Setter
 public class Employee {
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int emp_id;
     @Column(name = "First_Name", table = "employeeName")
     private String emp_firstName;
@@ -40,4 +41,7 @@ public class Employee {
         this.organization = organization;
     }
 
+    public Employee(String email) {
+        this.email = email;
+    }
 }

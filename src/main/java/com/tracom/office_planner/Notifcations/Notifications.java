@@ -18,6 +18,7 @@ import java.time.LocalDateTime;
 
 public class Notifications {
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int notification_id;
     private LocalDateTime notification_Date;
     private LocalDateTime notification_Time;

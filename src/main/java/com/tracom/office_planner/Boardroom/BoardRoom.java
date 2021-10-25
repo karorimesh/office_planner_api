@@ -5,6 +5,7 @@ import com.tracom.office_planner.Organization.Organization;
 import lombok.*;
 
 import javax.persistence.*;
+import java.util.List;
 import java.util.Set;
 
 @Entity
@@ -18,20 +19,20 @@ import java.util.Set;
 
 public class BoardRoom {
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int board_id;
     private String board_name;
     @ManyToOne
     private Organization organization;
     @OneToMany
-    private Set<Meeting> meetings;
+    private List<Meeting> meetings;
 
-
-
-    public BoardRoom(String board_name, Organization organization, Set<Meeting> meetings) {
+    public BoardRoom(int board_id, String board_name) {
+        this.board_id = board_id;
         this.board_name = board_name;
-        this.organization = organization;
-        this.meetings = meetings;
     }
 
-
+    public BoardRoom(String board_name) {
+        this.board_name = board_name;
+    }
 }

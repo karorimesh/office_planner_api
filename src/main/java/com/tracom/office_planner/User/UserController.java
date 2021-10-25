@@ -1,6 +1,7 @@
 package com.tracom.office_planner.User;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -15,6 +16,10 @@ import java.util.List;
 public class UserController {
     @Autowired
     private UserRepository userRepo;
+    @Autowired
+    private UserServiceClass userService;
+
+
 
     @GetMapping("/list_users")
     public String viewUsers(Model model){
@@ -22,11 +27,7 @@ public class UserController {
         model.addAttribute("userList", usersList);
         return "list_users";
     }
-    @GetMapping("")
 
-    public String viewHomePage() {
-        return ("index");
-    }
 
     @RequestMapping("/delete_user/{user_id}")
     public String deleteUser(@PathVariable(name = "user_id") int id) {
@@ -46,18 +47,26 @@ public class UserController {
      */
     @PostMapping("/save_user")
     public String saveNewUser(User us) {
-
-
+        BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
+        String encoded = encoder.encode(us.getUser_password());
+        us.setUser_password(encoded);
         userRepo.save(us);
+        userService.sendMail(us);
         return "list_users";
     }
 
     @RequestMapping("/edit_user/{user_id}")
-    public ModelAndView showEditUserForm(@PathVariable(name = "user_id") Integer id) {
-        ModelAndView mnv = new ModelAndView("edit_user");
-        User user = userRepo.getById(id);
-        mnv.addObject("user", user);
-        return mnv;
+//    public ModelAndView showEditUserForm(@PathVariable(name = "user_id") Integer id) {
+//        ModelAndView mnv = new ModelAndView("edit_user");
+//        User user = userRepo.getById(id);
+//        mnv.addObject("User", user);
+//        return mnv;
+//    }
+    public ModelAndView userProfile(@PathVariable(name = "user_id") Integer user_id){
+        ModelAndView modelAndView = new ModelAndView("edit_user");
+        User user = userRepo.getById(user_id);
+        modelAndView.addObject("profile",user);
+        return modelAndView;
     }
 
 

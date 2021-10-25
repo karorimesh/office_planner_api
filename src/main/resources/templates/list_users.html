@@ -1,9 +1,10 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="https://www.thymeleaf.org/thymeleaf-extras-springsecurity5">
 <head>
     <meta charset="UTF-8">
     <title>SMS Version 1.0</title>
-    <link rel="stylesheet" type="text/css" href="/webjars/bootstrap/css/bootstrap.min.css"/>
+    <link rel="stylesheet" type="text/css" href="/webjars/bootstrap/4.3.1/css/bootstrap.min.css"/>
     <meta name='viewport' content='width=device-width, initial-scale=1'>
     <script src='https://kit.fontawesome.com/a076d05399.js' crossorigin='anonymous'></script>
 </head>
@@ -24,6 +25,7 @@
                 <th>Name</th>
                 <th>Password</th>
                 <th>Role</th>
+                <th sec:authenticate="hasAnyAuthority('admin')">Actions</th>
             </tr>
             </thead>
             <tbody>
@@ -32,13 +34,12 @@
                 <td th:text="${userRepo.user_name}">User Name</td>
                 <td th:text="${userRepo.user_password}">Password</td>
                 <td th:text="${userRepo.user_role}">Role</td>
-                <td>
+                <td sec:authorize="hasAnyAuthority('admin')">
                     <a th:href="@{'/edit_user/' + ${userRepo.user_id}}"
                        onclick="return confirm('Are you sure you want to edit the User details?')">
                         <button style='font-size:16px;color:blue'>Edit <i class='fas fa-edit'></i></button>
-                    </a></td>
-                <td>
-                    <a th:href="@{'/delete_user/' + ${userRepo.user_id}}"
+                    </a>
+                    <a sec:authorize="hasAuthority('admin')" th:href="@{'/delete_user/' + ${userRepo.user_id}}"
                        onclick="return confirm('Are you sure you want to delete the user?')">
                         <button style='font-size:16px;color:red'>Delete <i class='far fa-trash-alt'></i></button>
                     </a>
