@@ -8,6 +8,7 @@ import lombok.*;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.persistence.*;
+import java.io.Serializable;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.ArrayList;
@@ -22,7 +23,6 @@ import java.util.Set;*/
 @Entity
 @Table(name = "meeting")
 //Lombok
-@ToString
 @AllArgsConstructor
 @NoArgsConstructor
 @Getter
@@ -30,42 +30,47 @@ import java.util.Set;*/
 public class Meeting {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int meet_id;
-    private String meet_name;
+    private int meetId;
+    private String meetName;
     private String description;
     private int capacity;
-    @ManyToOne
-    private User user;
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @JoinTable(
+            name = "user_meetings",
+            joinColumns = @JoinColumn(name = "meet_id"),
+            inverseJoinColumns = @JoinColumn(name = "user_id")
+    )
+    private List<User> users = new ArrayList<User>();
+    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @JoinColumn(name = "room")
     private BoardRoom boardroom;
     @OneToMany(cascade = CascadeType.PERSIST, orphanRemoval = true)
     private List<CoOwners> coOwners;
-    @OneToMany(cascade = CascadeType.PERSIST, orphanRemoval = true)
+    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY, mappedBy = "meeting")
 //    @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
-    private List<RepeatMeetings> repeatMeetings;
+    private List<RepeatMeetings> repeatMeetings = new ArrayList<>();
 //    @DateTimeFormat(iso = DateTimeFormat.ISO.TIME)
-    private LocalTime meet_start;
+    private LocalTime meetStart;
 //    @DateTimeFormat(iso = DateTimeFormat.ISO.TIME)
-    private LocalTime meet_end;
-//    private LocalDate meet_date;
+    private LocalTime meetEnd;
+
 
     //Constructor without Id
 
 
-//    public Meeting(String meet_name,
-//                   String description, int capacity,
-//                   User user, BoardRoom boardroom,
-//                   List<CoOwners> coOwners,
-//                   List<RepeatMeetings> repeatMeetings,
-//                   String meet_start, String meet_end) {
-//        this.meet_name = meet_name;
-//        this.description = description;
-//        this.capacity = capacity;
-//        this.user = user;
-//        this.boardroom = boardroom;
-//        this.coOwners = coOwners;
-//        this.repeatMeetings = repeatMeetings;
-//        this.meet_start = meet_start;
-//        this.meet_end = meet_end;
-//    }
+    @Override
+    public String toString() {
+        return "Meeting{" +
+                "meetId=" + meetId +
+                ", meetName='" + meetName + '\'' +
+                ", description='" + description + '\'' +
+                ", capacity=" + capacity +
+                ", users=" + users +
+                ", boardroom=" + boardroom +
+                ", coOwners=" + coOwners +
+                ", repeatMeetings=" + repeatMeetings +
+                ", meetStart=" + meetStart +
+                ", meetEnd=" + meetEnd +
+                '}';
+    }
 }

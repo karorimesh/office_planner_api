@@ -20,7 +20,9 @@
 
 <body>
 <div class="container text-center">
+    <h4><a th:href="@{/home}">Home</a></h4>
     <h3>Create Meeting</h3>
+
 
     <br/>
     <br/>
@@ -86,7 +88,7 @@
             <!--                </div>-->
             <!--            </div>-->
 
-            <div>
+<!--            <div>-->
                 <div class="form-group row">
                     <label class="col-form-label col-4">Co-Owners:</label>
                     <div class="col-8">
@@ -98,12 +100,12 @@
 
 
 
-            </div>
+<!--            </div>-->
             <div>
                 <div class="form-group row">
-                    <label class="col-form-label col-4">Date:</label>
+                    <label class="col-form-label col-4">Dates:</label>
                     <div class="col-8">
-                        <input class="form-control" th:field="*{repeatMeetings}" type="text"
+                        <input class="form-control date" th:field="*{repeatMeetings}" type="text" placeholder="Dates"
                         />
                     </div>
                 </div>
@@ -139,12 +141,12 @@
                         <div>
                             <div class="form-group row">
                                 <label class="col-form-label col-4">Boardroom</label>
-<!--                                <div class="col-8">-->
-<!--                                    <select th:field="*{boardroom}">-->
-<!--                                        <option th:each="i : ${board}" th:value="${i.board_name}" th:text="${i.board_name}">-->
-<!--                                        </option>-->
-<!--                                    </select>-->
-<!--                                </div>-->
+                                <div class="col-8">
+                                    <select th:field="*{boardroom}">
+                                        <option th:each="i : ${board}" th:value="${i.board_id}" th:text="${i.board_name}">
+                                        </option>
+                                    </select>
+                                </div>
                             </div>
                         </div>
 
@@ -156,12 +158,9 @@
     </form>
 </div>
 <script type="text/javascript">
-    $(function () {
-        $('#date-picker').datepicker({
-            multidate: true,
-            format: 'dd-mm-yyyy'
-        });
-
+    $('.date').datepicker({
+        multidate: true,
+        format:'yyyy-mm-dd'
     });
 </script>
 </body>

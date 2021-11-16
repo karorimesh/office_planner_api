@@ -17,9 +17,9 @@ import javax.persistence.*;
 
 public class Organization {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int organization_id;
+    private String organization_id;
     private String organization_name;
+    private String organization_desc;
 
     public Organization(String organization_name) {
         this.organization_name = organization_name;

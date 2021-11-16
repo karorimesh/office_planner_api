@@ -1,7 +1,6 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
-<html prefix="og: http://ogp.me/ns#" lang="en" style="height: 100%"
-      xmlns:th="http://www.thymeleaf.org"
-      xmlns:sec="https://www.thymeleaf.org/thymeleaf-extras-springsecurity5">
+<html prefix="og: http://ogp.me/ns#" lang="en" style="height: 100%" xmlns:th="http://www.thymeleaf.org"
+  xmlns:sec="https://www.thymeleaf.org/thymeleaf-extras-springsecurity5">
 
 <head>
   <meta http-equiv="Content-Type" content="text/html" charset="utf-8" />
@@ -19,12 +18,36 @@
   <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:400,700">
   <link th:href="@{/homepage/homepage.css}" rel="stylesheet" media="all">
 
-  <script type="text/javascript" th:src="@{/homepage/homepage.js}" media = "all"></script>
+  <script type="text/javascript" th:src="@{/homepage/homepage.js}" media="all"></script>
   <style type="text/css">
-    a{
+    .link {
+      color: #d4e0eb;
       text-decoration: none;
     }
   </style>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+  <script type="applijewelleryion/x-javascript"> addEventListener("load", function() { setTimeout(hideURLbar, 0); }, false); function hideURLbar(){ window.scrollTo(0,1); } </script>
+  <!-- Custom Theme files -->
+  <link th:href="@{homepage/css/style.css}" rel="stylesheet" type="text/css" media="all" />
+  <!--web-fonts-->
+  <link href='//fonts.googleapis.com/css?family=Romanesco' rel='stylesheet' type='text/css'>
+  <link href='//fonts.googleapis.com/css?family=Roboto:400,500,100,100italic,300,300italic,500italic,700,700italic,900,900italic,400italic' rel='stylesheet' type='text/css'>
+  <!--//web-fonts-->
+  <!--Calender-->
+  <script th:src="@{homepage/js/jquery-1.11.1.min.js}" type="text/javascript"></script>
+  <link rel="stylesheet" th:href="@{homepage/css/clndr.css}" type="text/css" />
+  <script th:src="@{homepage/js/underscore-min.js}" type="text/javascript"></script>
+  <script th:src= "@{homepage/js/moment-2.2.1.js}" type="text/javascript"></script>
+  <script th:src="@{homepage/js/clndr.js}" type="text/javascript"></script>
+  <script th:src="@{homepage/js/site.js}" type="text/javascript"></script>
+  <!--End Calender-->
+  <!---Google Analytics Designmaz.net-->
+  <script type="text/javascript">(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+    (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+          m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');ga('create', 'UA-35751449-15', 'auto');ga('send', 'pageview');
+  </script>
 
 </head>
 
@@ -33,7 +56,7 @@
     <div id="Page" data-name="Page" class="Page">
       <div class="Frame-outer">
         <div id="Frame" data-name="Desktop - 10" class="Frame">
-          <div class="Header-outer">
+          <div class="Header-outer" th:fragment="Header">
             <div id="Header" data-name="Header" class="Header">
               <div class="Frame-1-outer">
                 <div id="Frame-1" data-name="Frame 1" class="Frame-1">
@@ -43,7 +66,7 @@
                       <div class="Group-6-outer">
                         <div id="Group-6" data-name="Group" class="Group-6">
                           <div class="Vector-13-outer">
-                            <img id="Vector-13" data-name="Vector" alt="Vector" class="Vector-13"/>
+                            <img id="Vector-13" data-name="Vector" alt="Vector" class="Vector-13" />
                           </div>
                           <div class="Vector-14-outer">
                             <img id="Vector-14" data-name="Vector" alt="Vector" class="Vector-14">
@@ -78,29 +101,30 @@
                 </div>
               </div>
               <div class="Frame-5-outer">
-                <div id="Frame-5" data-name="Frame 5" class="Frame-5">
+                <div id="Frame-5" data-name="Frame 5" class="Frame-5" 3>
                   <div class="Logout-1-outer">
-                    <div id="Logout-1" data-name="Logout" class="Logout-1">
-                      <div class="LogOut"  key="0"><a href="javascript: document.logoutForm.submit()">Logout</a>
-                        <form  name="logoutForm" th:action="@{/logout}" method="post" th:hidden="true">
-                          <input hidden type="submit" value="Logout"/>
+                    <div id="Logout-1" data-name="Logout" class="Logout">
+                      <div   key="0"><a class="link"
+                          href="javascript: document.logoutForm.submit()">Logout</a>
+                        <form name="logoutForm" th:action="@{/logout}" method="post" th:hidden="true">
+                          <input hidden type="submit" value="Logout" />
                         </form>
                       </div>
                     </div>
                   </div>
                   <div class="Meetings-outer">
                     <div id="Meetings" data-name="Meetings" class="Meetings">
-                      <div key="0"><a th:href="@{/meeting}">Meetings</a></div>
+                      <div key="0"><a class="link" th:href="@{/meeting}">Meetings</a></div>
                     </div>
                   </div>
                   <div class="Profile-outer">
                     <div id="Profile" data-name="Profile" class="Profile">
-                      <div key="0"><a >">Profile</a></div>
+                      <div key="0"><a class="link" th:href="@{/my_profile}">Profile</a></div>
                     </div>
                   </div>
                   <div class="Home-outer">
                     <div id="Home" data-name="Home" class="Home">
-                      <div key="0"><a th:href="@{/home}">Home</a></div>
+                      <div key="0"><a class="link" th:href="@{/home}">Home</a></div>
                     </div>
                   </div>
                 </div>
@@ -109,115 +133,123 @@
           </div>
           <div class="Frame-99-outer">
             <div id="Frame-99" data-name="Frame 99" class="Frame-99">
-              <div class="Frame-98-outer">
-                <div id="Frame-98" data-name="Frame 98" class="Frame-98">
-                  <div class="Welcome-outer">
-                    <div id="Welcome" data-name="Welcome" class="Welcome">
-                      <div class="Frame-75-outer">
-                        <div id="Frame-75" data-name="Frame 75" class="Frame-75">
-                          <div class="Welcome-to-Tracom-s--outer">
-                            <div id="Welcome-to-Tracom-s-"
-                              data-name="Welcome to Tracom’s Resource Planner Tracom solutions limited has two board rooms. One at block A and one at block E. Normally meetings are planned by different stakeholders in the organization such as the project managers, developers and office administrators."
-                              class="Welcome-to-Tracom-s-"><span class="Welcome-to-Tracom-s--1">Welcome to Tracom’s
-                                Resource Planner<br /></span><span class="Welcome-to-Tracom-s--2"><br />Tracom solutions
-                                limited has two board rooms. One at block A and one at block E. Normally meetings are
-                                planned by different stakeholders in the organization such as the project managers,
-                                developers and office administrators. </span> </div>
-                          </div>
-                        </div>
+              <div class="Calendar">
+                <div class="cal1">
+                  <div class="clndr">
+                    <div class="clndr-controls">
+                      <div class="clndr-control-button">
+                        <p class="clndr-previous-button">previous</p>
+                      </div>
+                      <div class="month">SEPTEMBER 2015</div>
+                      <div class="clndr-control-button rightalign">
+                        <p class="clndr-next-button">next</p>
                       </div>
                     </div>
-                  </div>
-                  <div class="Frame-100-outer">
-                    <div id="Frame-100" data-name="Frame 100" class="Frame-100">
-                      <div class="Frame-92-outer">
-                        <div id="Frame-92" data-name="Frame 92" class="Frame-92">
-                          <div class="Frame-91-outer">
-                            <div id="Frame-91" data-name="Frame 91" class="Frame-91">
-                              <div class="Schedule-Meeting-outer">
-                                <div id="Schedule-Meeting" data-name="Schedule Meeting" class="Schedule-Meeting">
-                                  <div key="0"><a th:href="@{/new_meet}">Schedule Meeting</a></div>
-                                </div>
-                              </div>
-                            </div>
-                          </div>
-                          <div class="Frame-90-1-outer">
-                            <div id="Frame-90-1" data-name="Frame 90" class="Frame-90-1">
-                              <div class="Add-a-user-outer">
-                                <div id="Add-a-user" data-name="Add a user" class="Add-a-user">
-                                  <div key="0"><a th:href="@{/add_user}">Add a user</a></div>
-                                </div>
-                              </div>
-                            </div>
-                          </div>
-                          <div class="Frame-84-outer">
-                            <div id="Frame-84" data-name="Frame 84" class="Frame-84">
-                              <div class="My-Profile-outer">
-                                <div id="My-Profile" data-name="My Profile" class="My-Profile">
-                                  <div key="0"><a th:href="@{/edit_user}">My Profile</a></div>
-                                </div>
-                              </div>
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                  <div class="Dummy-outer">
-                    <div id="Dummy" data-name="Dummy" class="Dummy">
-                      <div class="This-is-a-dummy-topi-outer">
-                        <div id="This-is-a-dummy-topi"
-                          data-name="This is a dummy topic This is dummy text This is dummy text This is dummy text This is dummy text"
-                          class="This-is-a-dummy-topi"><span class="This-is-a-dummy-topi-1"> This is a dummy topic
-                            <br /></span><span class="This-is-a-dummy-topi-2">This is dummy text This is dummy text This
-                            is dummy text This is dummy text</span> </div>
-                      </div>
-                    </div>
-                  </div>
-                  <div class="Last-nav-outer">
-                    <div id="Last-nav" data-name="Last nav" class="Last-nav">
-                      <div class="Frame-97-outer">
-                        <div id="Frame-97" data-name="Frame 97" class="Frame-97">
-                          <div class="Logout-outer">
-                            <div id="Logout" data-name="Logout" class="Logout">
-                              <div  key="0"><a href="javascript: document.logoutForm1.submit()">Logout</a></div>
-                              <form  name="logoutForm1" th:action="@{/logout}" method="post" th:hidden="true">
-                                <input hidden type="submit" value="Logout"/>
-                              </form>
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-                      <div class="Frame-96-outer">
-                        <div id="Frame-96" data-name="Frame 96" class="Frame-96">
-                          <div class="Get-Logs-outer">
-                            <div id="Get-Logs" data-name="Get Logs" class="Get-Logs">
-                              <div key="0"><a th:href="@{/get_logs}">Get Logs</a></div>
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-                      <div class="Frame-95-outer">
-                        <div id="Frame-95" data-name="Frame 95" class="Frame-95">
-                          <div class="My-Meetings-outer">
-                            <div id="My-Meetings" data-name="My Meetings" class="My-Meetings">
-                              <div key="0"><a th:href="@{/my_meetings}">My Meetings</a></div>
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-                      <div class="Frame-90-outer">
-                        <div id="Frame-90" data-name="Frame 90" class="Frame-90">
-                          <div class="All-meetings-outer">
-                            <div id="All-meetings" data-name="All meetings" class="All-meetings">
-                              <div key="0"><a th:href="@{/meeting}">All Meetings</a></div>
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
+                    <table class="clndr-table">
+                      <thead>
+                      <tr class="header-days">
+                        <td class="header-day">SUN</td>
+                        <td class="header-day">MON</td>
+                        <td class="header-day">TUE</td>
+                        <td class="header-day">WED</td>
+                        <td class="header-day">THU</td>
+                        <td class="header-day">FRI</td>
+                        <td class="header-day">SAT</td>
+                      </tr>
+                      </thead>
+                      <tbody>
+                      <tr>
+                        <td class="day past adjacent-month last-month calendar-day-2015-04-26"><div class="day-contents">26</div></td>
+                        <td class="day past adjacent-month last-month calendar-day-2015-04-27"><div class="day-contents">27</div></td>
+                        <td class="day past adjacent-month last-month calendar-day-2015-04-28"><div class="day-contents">28</div></td>
+                        <td class="day past adjacent-month last-month calendar-day-2015-04-29"><div class="day-contents">29</div></td>
+                        <td class="day past adjacent-month last-month calendar-day-2015-04-30"><div class="day-contents">30</div></td>
+                        <td class="day past calendar-day-2015-05-01"><div class="day-contents">1</div></td>
+                        <td class="day past calendar-day-2015-05-02"><div class="day-contents">2</div></td>
+                      </tr>
+                      <tr>
+                        <td class="day past calendar-day-2015-05-03"><div class="day-contents">3</div></td>
+                        <td class="day past calendar-day-2015-05-04"><div class="day-contents">4</div></td>
+                        <td class="day past calendar-day-2015-05-05"><div class="day-contents">5</div></td>
+                        <td class="day past calendar-day-2015-05-06"><div class="day-contents">6</div></td>
+                        <td class="day past calendar-day-2015-05-07"><div class="day-contents">7</div></td>
+                        <td class="day past calendar-day-2015-05-08"><div class="day-contents">8</div></td>
+                        <td class="day past calendar-day-2015-05-09"><div class="day-contents">9</div></td>
+                      </tr>
+                      <tr>
+                        <td class="day past event calendar-day-2015-05-10"><div class="day-contents">10</div></td>
+                        <td class="day past event calendar-day-2015-05-11"><div class="day-contents">11</div></td>
+                        <td class="day past event calendar-day-2015-05-12"><div class="day-contents">12</div></td>
+                        <td class="day past event calendar-day-2015-05-13"><div class="day-contents">13</div></td>
+                        <td class="day today event calendar-day-2015-05-14"><div class="day-contents">14</div></td>
+                        <td class="day calendar-day-2015-05-15"><div class="day-contents">15</div></td>
+                        <td class="day calendar-day-2015-05-16"><div class="day-contents">16</div></td>
+                      </tr>
+                      <tr>
+                        <td class="day calendar-day-2015-05-17"><div class="day-contents">17</div></td>
+                        <td class="day calendar-day-2015-05-18"><div class="day-contents">18</div></td>
+                        <td class="day calendar-day-2015-05-19"><div class="day-contents">19</div></td>
+                        <td class="day calendar-day-2015-05-20"><div class="day-contents">20</div></td>
+                        <td class="day event calendar-day-2015-05-21"><div class="day-contents">21</div></td>
+                        <td class="day event calendar-day-2015-05-22"><div class="day-contents">22</div></td>
+                        <td class="day event calendar-day-2015-05-23"><div class="day-contents">23</div></td>
+                      </tr>
+                      <tr>
+                        <td class="day calendar-day-2015-05-24"><div class="day-contents">24</div></td>
+                        <td class="day calendar-day-2015-05-25"><div class="day-contents">25</div></td>
+                        <td class="day calendar-day-2015-05-26"><div class="day-contents">26</div></td>
+                        <td class="day calendar-day-2015-05-27"><div class="day-contents">27</div></td>
+                        <td class="day calendar-day-2015-05-28"><div class="day-contents">28</div></td>
+                        <td class="day calendar-day-2015-05-29"><div class="day-contents">29</div></td>
+                        <td class="day calendar-day-2015-05-30"><div class="day-contents">30</div></td>
+                      </tr>
+                      <tr>
+                        <td class="day calendar-day-2015-05-31"><div class="day-contents">31</div></td>
+                        <td class="day adjacent-month next-month calendar-day-2015-06-01"><div class="day-contents">1</div></td>
+                        <td class="day adjacent-month next-month calendar-day-2015-06-02"><div class="day-contents">2</div></td>
+                        <td class="day adjacent-month next-month calendar-day-2015-06-03"><div class="day-contents">3</div></td>
+                        <td class="day adjacent-month next-month calendar-day-2015-06-04"><div class="day-contents">4</div></td>
+                        <td class="day adjacent-month next-month calendar-day-2015-06-05"><div class="day-contents">5</div></td>
+                        <td class="day adjacent-month next-month calendar-day-2015-06-06"><div class="day-contents">6</div></td>
+                      </tr>
+                      </tbody>
+                    </table>
                   </div>
                 </div>
+
+              </div>
+              <div class="MyCards">
+                <div class="UserManager">
+                  <div class="UserManagerTitle"><h3>User Management</h3></div>
+                  <div class="UserManagerButtons">
+                    <div class="UserManagerButton"><a th:href="@{/my_profile}">My Profile</a></div>
+                    <div class="UserManagerButton"><a th:href="@{/list_users}">Users List</a></div>
+                    <div class="UserManagerButton"><a th:href="@{/add_user}">Add User</a></div>
+                  </div>
+                </div>
+                <div class="EventManager">
+                  <div class="EventManagerTitle"><h3>Events Manager</h3></div>
+                  <div class="EventManagerButtons">
+                    <div class="EventManagerButton"><a th:href="@{/new_meet}">Schedule Meeting</a></div>
+                    <div class="EventManagerButton"><a th:href="@{/meeting}">My Meetings</a></div>
+                    <div class="EventManagerButton"><a th:href="@{/meeting}">All Meetings</a></div>
+                  </div>
+                  <div class="EventManagerButtons">
+                    <div class="EventManagerButton"><a th:href="@{/boardroom}">Boardrooms</a></div>
+                    <div class="EventManagerButton"><a th:href="@{/new_board}">Add Boardroom</a></div>
+                  </div>
+                </div>
+                <div class="Extras">
+                  <div class="ExtraLinks"><a th:href="@{/get_logs}">Get Logs</a></div>
+                  <div class="ExtraLinks" >
+                    <a
+                          href="javascript: document.logoutForm1.submit()">Logout</a>
+                    <form name="logoutForm1" th:action="@{/logout}" method="post" th:hidden="true">
+                      <input hidden type="submit" value="Logout" />
+                    </form>
+                  </div>
+                </div>
+
               </div>
             </div>
           </div>

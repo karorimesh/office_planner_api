@@ -1,26 +1,31 @@
-<!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org">
-<head>
-    <meta charset="UTF-8">
-    <title>Add User</title>
-    <link rel="stylesheet" type="text/css" href="/webjars/bootstrap/css/bootstrap.min.css"/>
-    <script type="text/javascript" src="/webjars/jquery/jquery.min.js"></script>
-    <script type="text/javascript" src="/webjars/bootstrap/js/bootstrap.min.js"></script>
-</head>
-<body>
-<div class="container text-center">
-    <h3>Edit</h3>
+<!--<!DOCTYPE html>-->
+<!--<html lang="en" xmlns:th="http://www.thymeleaf.org">-->
+<!--<head>-->
+<!--    <meta charset="UTF-8">-->
+<!--    <title>Add User</title>-->
+<!--    <link rel="stylesheet" type="text/css" href="/webjars/bootstrap/css/bootstrap.min.css"/>-->
+<!--    <script type="text/javascript" src="/webjars/jquery/jquery.min.js"></script>-->
+<!--    <script type="text/javascript" src="/webjars/bootstrap/js/bootstrap.min.js"></script>-->
+<!--</head>-->
+<!--<body>-->
+<!--<div class="container text-center">-->
+<!--    <h3>Edit</h3>-->
 
-    <br/>
-    <br/>
+<!--    <br/>-->
+<!--    <br/>-->
 
 
-    <form th:action="@{/save_user}" method="post"
-          style="max-width: 600px; margin: 0 auto;"
-          th:object="${profile}">
+<!--    <form th:action="@{/save_user}" method="post"-->
+<!--          style="max-width: 600px; margin: 0 auto;"-->
+<!--          th:object="${profile}">-->
 
-        <input type="text" th:field ="*{user_name}">
 <!--        <div>-->
+<!--            <div class="form-group row">-->
+<!--                <label class="col-form-label col-4">Id</label>-->
+<!--                <div class="col-8">-->
+<!--                    <input  class="form-control" th:field="*{user_id}" readonly/>-->
+<!--                </div>-->
+<!--            </div>-->
 <!--            <div class="form-group row">-->
 <!--                <label class="col-form-label col-4">Name</label>-->
 <!--                <div class="col-8">-->
@@ -99,18 +104,18 @@
 <!--                <button type="submit" class="btn btn-primary" onclick="validate()">Add User</button>-->
 <!--            </div>-->
 <!--        </div>-->
-    </form>
-    <script type="text/javascript">
-        function validate() {
-            var password = document.getElementById("password").value;
-            var confirmPassword = document.getElementById("cnfPassword").value;
-            if (password != confirmPassword) {
-                alert("Passwords do not match.");
-                return false;
-            }
-            return true;
-        }
-    </script>
-</div>
-</body>
-</html>
+<!--    </form>-->
+<!--    <script type="text/javascript">-->
+<!--        function validate() {-->
+<!--            var password = document.getElementById("password").value;-->
+<!--            var confirmPassword = document.getElementById("cnfPassword").value;-->
+<!--            if (password != confirmPassword) {-->
+<!--                alert("Passwords do not match.");-->
+<!--                return false;-->
+<!--            }-->
+<!--            return true;-->
+<!--        }-->
+<!--    </script>-->
+<!--</div>-->
+<!--</body>-->
+<!--</html>-->

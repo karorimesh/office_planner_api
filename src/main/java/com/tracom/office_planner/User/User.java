@@ -1,9 +1,13 @@
 package com.tracom.office_planner.User;
 
 import com.tracom.office_planner.Employee.Employee;
+import com.tracom.office_planner.Meeting.Meeting;
+import com.tracom.office_planner.Organization.Organization;
 import lombok.*;
 
 import javax.persistence.*;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Table(name = "user")
@@ -17,58 +21,68 @@ public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
 
-    private int user_id;
+    private int userId;
+    @Column(unique = true)
+    private String userName;
 
-    private String user_name;
+    private String userPassword;
 
-    private String user_password;
+    private String userRole;
+    @Column(unique = true)
+    private String userEmail;
 
-    private String user_role;
-
-    private String user_email;
+    @Column(name = "token")
+    private String token;
 
     //private boolean user_admin;
     @OneToOne(cascade = CascadeType.ALL)
     private Employee employee;
 
-    public int getUser_id() {
-        return user_id;
+    @ManyToOne
+    @JoinColumn(name = "organization_id")
+    private Organization organization;
+
+    @ManyToMany(mappedBy = "users")
+    private List<Meeting> meetings = new ArrayList<Meeting>();
+
+    public int getUserId() {
+        return userId;
     }
 
-    public void setUser_id(int user_id) {
-        this.user_id = user_id;
+    public void setUserId(int user_id) {
+        this.userId = user_id;
     }
 
-    public String getUser_name() {
-        return user_name;
+    public String getUserName() {
+        return userName;
     }
 
-    public void setUser_name(String user_name) {
-        this.user_name = user_name;
+    public void setUserName(String user_name) {
+        this.userName = user_name;
     }
 
-    public String getUser_password() {
-        return user_password;
+    public String getUserPassword() {
+        return userPassword;
     }
 
-    public void setUser_password(String user_password) {
-        this.user_password = user_password;
+    public void setUserPassword(String user_password) {
+        this.userPassword = user_password;
     }
 
-    public String getUser_role() {
-        return user_role;
+    public String getUserRole() {
+        return userRole;
     }
 
-    public void setUser_role(String user_role) {
-        this.user_role = user_role;
+    public void setUserRole(String user_role) {
+        this.userRole = user_role;
     }
 
-    public String getUser_email() {
-        return user_email;
+    public String getUserEmail() {
+        return userEmail;
     }
 
-    public void setUser_email(String user_email) {
-        this.user_email = user_email;
+    public void setUserEmail(String user_email) {
+        this.userEmail = user_email;
     }
 
     public Employee getEmployee() {
@@ -79,11 +93,11 @@ public class User {
         this.employee = employee;
     }
 
-    public User(String user_name, String user_password, String user_role, String user_email, Employee employee) {
-        this.user_name = user_name;
-        this.user_password = user_password;
-        this.user_role = user_role;
-        this.user_email = user_email;
+    public User(String userName, String userPassword, String userRole, String userEmail, Employee employee) {
+        this.userName = userName;
+        this.userPassword = userPassword;
+        this.userRole = userRole;
+        this.userEmail = userEmail;
         this.employee = employee;
     }
 }

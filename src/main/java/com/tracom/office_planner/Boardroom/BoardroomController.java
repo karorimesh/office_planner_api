@@ -4,7 +4,10 @@ import com.tracom.office_planner.Meeting.Meeting;
 import com.tracom.office_planner.Meeting.MeetingRepository;
 import com.tracom.office_planner.RepeatMeetings.RepeatMeetings;
 import com.tracom.office_planner.RepeatMeetings.RepeatMeetingsRepo;
+import com.tracom.office_planner.User.User;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -17,40 +20,53 @@ import java.util.List;
 @Controller
 public class BoardroomController {
 
-        @Autowired
-        private BoardRepository boardRepository;
 
-        @GetMapping("/boardroom")
+        private BoardRepository boardRepository;
+        private BoardServiceClass serviceClass;
+        @Autowired
+    public BoardroomController(BoardRepository boardRepository, BoardServiceClass serviceClass) {
+        this.boardRepository = boardRepository;
+        this.serviceClass = serviceClass;
+    }
+
+    @GetMapping("/boardroom")
         public String viewBoards(Model model){
-            List<BoardRoom> boardRooms = boardRepository.findAll();
-            model.addAttribute("board", boardRooms);
-            return "boardroom";
+            return viewBoardsList(model, null,1,"boardName","asc");
         }
 
+        @GetMapping("/boardroom/page/{page}")
+        public String viewBoardsList(Model model, @Param("keyword") String keyword,
+                                    @PathVariable(name = "page") int page,
+                                    @Param("field") String field, @Param("dir") String dir) {
+            Page<BoardRoom> content = serviceClass.listAll(keyword,page,dir,field);
+            List<BoardRoom> listBoards = content.getContent();
+            model.addAttribute("board", listBoards);
+            model.addAttribute("keyword",keyword);
+            model.addAttribute("currentPage", page);
+            model.addAttribute("totalPages", content.getTotalPages());
+            model.addAttribute("totalBoards",content.getTotalElements());
+            model.addAttribute("sortDir", dir);
+            model.addAttribute("sortField",field);
+            model.addAttribute("reverseDir",dir.equals("asc")?"desc":"asc");
+            return "boardrooms/boardrooms";
+        }
         @RequestMapping("/delete_board/{board_id}")
         public String deleteBoard(@PathVariable(name = "board_id") int id) {
             boardRepository.deleteById(id);
             return "boardroom";
         }
 
-//        @InitBinder
-//        protected void initBinder(WebDataBinder binder) {
-//            SimpleDateFormat dateFormat = new SimpleDateFormat("HH:mm");
-//            binder.registerCustomEditor(LocalTime.class, new CustomDateEditor(
-//                  dateFormat, true));
-//        }
-
         @GetMapping("/new_board")
         public String boardForm(Model model) {
             BoardRoom boardRoom = new BoardRoom();
             model.addAttribute("board", boardRoom);
-            return "new_board";
+            return "boardroom/boardroom";
         }
 
         @PostMapping("/save_board")
         public String saveNewBoard(BoardRoom boardRoom) {
             boardRepository.save(boardRoom);
-            return "boardroom";
+            return "redirect:/boardroom";
         }
 
         @RequestMapping("/edit/{board_id}")

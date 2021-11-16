@@ -1,4 +1,8 @@
 package com.tracom.office_planner.Organization;
 
-public interface OrganizationRepo {
+import org.springframework.data.jpa.repository.JpaRepository;
+
+public interface OrganizationRepo extends JpaRepository<Organization, String> {
+
+
 }

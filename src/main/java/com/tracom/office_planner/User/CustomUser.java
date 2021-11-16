@@ -19,23 +19,22 @@ public class CustomUser implements UserDetails {
 
     private User user;
 
-
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
 
         List<SimpleGrantedAuthority> authorities  = new ArrayList<>();
-        authorities.add(new SimpleGrantedAuthority(user.getUser_role()));
+        authorities.add(new SimpleGrantedAuthority(user.getUserRole()));
         return authorities;
     }
 
     @Override
     public String getPassword() {
-        return user.getUser_password();
+        return user.getUserPassword();
     }
 
     @Override
     public String getUsername() {
-        return user.getUser_name();
+        return user.getUserName();
     }
 
     @Override

@@ -19,7 +19,7 @@ public class ProjectController {
 
     @GetMapping("/landing")
     public String landingPage(){
-        return "landing/landing";
+        return "form";
     }
 
 

@@ -35,9 +35,9 @@ public class MeetRepoTest {
         RepeatMeetings repeat = new RepeatMeetings(LocalDate.of(2020,12,12));
         List<RepeatMeetings> repeated = new ArrayList<>();
         repeated.add(repeat);
-        meet.setMeet_name("tracom test");
-        meet.setMeet_start(LocalTime.of(15,15));
-        meet.setMeet_end(LocalTime.of(15,30));
+        meet.setMeetName("tracom test");
+        meet.setMeetStart(LocalTime.of(15,15));
+        meet.setMeetEnd(LocalTime.of(15,30));
         meet.setCapacity(4);
         meet.setRepeatMeetings(repeated);
 //        repeat.setMeet_date(LocalDate.of(2021,12,12));
@@ -48,7 +48,7 @@ public class MeetRepoTest {
 //        RepeatMeetings saveRepeat = repo.save(repeat);
 
         Assertions.assertThat(saveMeet).isNotNull();
-        Assertions.assertThat(saveMeet.getMeet_id()).isGreaterThan(0);
+        Assertions.assertThat(saveMeet.getMeetId()).isGreaterThan(0);
 //        Assertions.assertThat(saveRepeat).isNotNull();
 //        Assertions.assertThat(saveRepeat.getRepeat_id()).isGreaterThan(0);
     }
