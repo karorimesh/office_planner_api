@@ -279,7 +279,7 @@
   justify-content:flex-start;
   color:rgba(255, 255, 255, 1);
   font-style:normal;
-  font-family:Roboto;
+  font-family: Roboto, serif;
   font-weight:400;
   font-size:36px;
   line-height:43px;
@@ -294,7 +294,7 @@
   position:relative;
   z-index:16;
   pointer-events:auto;
-  margin-left:1040px;
+  margin-left:900px;
   width:400px;
   min-width:400px;
   height:35px;
@@ -378,7 +378,7 @@
   justify-content:flex-start;
   color:rgba(255, 255, 255, 1);
   font-style:normal;
-  font-family:Roboto;
+  font-family: Roboto, serif;
   font-weight:400;
   font-size:18px;
   line-height:29px;
@@ -405,7 +405,7 @@
   justify-content:flex-start;
   color:rgba(255, 255, 255, 1);
   font-style:normal;
-  font-family:Roboto;
+  font-family: Roboto, serif;
   font-weight:400;
   font-size:18px;
   line-height:29px;
@@ -417,18 +417,18 @@
   display:flex;
 }
 .Frame-56{
-  position:relative;
-  z-index:21;
-  pointer-events:auto;
-  margin-left:236px;
-  width:902px;
-  min-width:902px;
-  height:680px;
-  margin-top:-905px;
-  margin-bottom:225px;
-  min-height:680px;
-  background-color:rgba(214, 70, 208, 0.30000001192092896);
-  filter:drop-shadow(5px 10px 50px rgba(0, 0, 0, 0.25));
+  position: relative;
+  z-index: 21;
+  pointer-events: auto;
+  margin-left: 236px;
+  width: 800px;
+  /* min-width: 902px; */
+  height: 520px;
+  margin-top: -880px;
+  margin-bottom: 225px;
+  /* min-height: 680px; */
+  background-color: rgba(214, 70, 208, 0.30000001192092896);
+  filter: drop-shadow(5px 10px 50px rgba(0, 0, 0, 0.25));
 }
 .Frame-56-outer{
   pointer-events:auto;
@@ -440,9 +440,9 @@
   position:relative;
   z-index:22;
   pointer-events:auto;
-  margin-left:316px;
-  width:270px;
-  min-width:270px;
+  margin-left:295px;
+  width:313px;
+  min-width:313px;
   height:62px;
   margin-top:7px;
   margin-bottom:611px;
@@ -459,8 +459,8 @@
   z-index:23;
   pointer-events:auto;
   margin-left:10px;
-  width:250px;
-  min-width:250px;
+  width:293px;
+  min-width:293px;
   margin-top:10px;
   margin-bottom:10px;
   min-height:42px;
@@ -1961,4 +1961,11 @@
   height:100%;
   left:0;
   top:0;
+}
+.board-form{
+
+}
+a{
+  color: #d4e0eb;
+  text-decoration: none;
 }

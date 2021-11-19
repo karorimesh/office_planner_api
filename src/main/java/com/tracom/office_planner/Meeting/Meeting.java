@@ -2,6 +2,7 @@ package com.tracom.office_planner.Meeting;
 
 import com.tracom.office_planner.Boardroom.BoardRoom;
 import com.tracom.office_planner.CoOwners.CoOwners;
+import com.tracom.office_planner.Organization.Organization;
 import com.tracom.office_planner.RepeatMeetings.RepeatMeetings;
 import com.tracom.office_planner.User.User;
 import lombok.*;
@@ -53,6 +54,9 @@ public class Meeting {
     private LocalTime meetStart;
 //    @DateTimeFormat(iso = DateTimeFormat.ISO.TIME)
     private LocalTime meetEnd;
+    @ManyToOne
+    @JoinColumn(name = "organization")
+    private Organization organization;
 
 
     //Constructor without Id

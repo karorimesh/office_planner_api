@@ -5,30 +5,55 @@
   <meta http-equiv="Content-Type" content="text/html" charset="utf-8" />
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
   <script src="https://ajax.googleapis.com/ajax/libs/webfont/1.6.26/webfont.js"></script>
-  <link href="/webjars/bootstrap/4.3.1/css/bootstrap.min.css" rel="stylesheet" type="text/css" />
-  <script src="/webjars/jquery/3.0.0/jquery.min.js" type="text/javascript"></script>
-  <script src="/webjars/bootstrap/4.3.1/js/bootstrap.min.js" type="text/javascript"></script>
-  <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css" rel="stylesheet">
-  <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datetimepicker/4.17.47/css/bootstrap-datetimepicker.css"
-    rel="stylesheet">
-  <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.6.3/css/all.css"
-    integrity="sha384-UHRtZLI+pbxtHCWp1t77Bi1L4ZtiqrqD80Kn4Z8NTSRyMA2Fd33n5dQ8lWUE00s/" crossorigin="anonymous">
-  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
-  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.24.0/moment.min.js"></script>
+
+  <style type="text/css">
+    a {
+      text-decoration: none;
+    }
+
+    body {
+      background: #f7f7ff;
+      margin-top: 20px;
+    }
+
+    .card {
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      min-width: 0;
+      word-wrap: break-word;
+      background-color: #fff;
+      background-clip: border-box;
+      border: 0 solid transparent;
+      border-radius: .25rem;
+      margin-bottom: 1.5rem;
+      box-shadow: 0 2px 6px 0 rgba(218, 218, 253, 0.7), 0 2px 6px 0 rgba(206, 206, 238, 0.5);
+    }
+
+    .me-2 {
+      margin-right: .5rem !important;
+    }
+  </style>
+
 
   <meta name="viewport" content="width=device-width, height=device-height, initial-scale=1, maximum-scale=5" />
 
-  <title>Planner</title>
-  <meta name="description" content="Planner Description">
-  <meta property="og:title" content="Planner">
-  <meta property="og:description" content="Planner Description">
+  <title>planner</title>
+  <meta name="description" content="planner Description">
+  <meta property="og:title" content="planner">
+  <meta property="og:description" content="planner Description">
   <meta name="generator" content="Quest">
 
   <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:400,700">
-  <link th:href="@{/create.organization/create.organization.css}" rel="stylesheet" media="all">
+  <link th:href="@{/edit.profile/editProfile.css}" rel="stylesheet" media="all">
 
-  <script type="text/javascript" th:src="@{/create.organization/create.organization.js}" media="all"></script>
+  <script type="text/javascript" th:src="@{/edit.profile/editProfile.js}" media="all"></script>
+  <style type="text/css">
+    .link {
+      color: #d4e0eb;
+      text-decoration: none;
+    }
+  </style>
 
 </head>
 
@@ -36,7 +61,7 @@
   <div class="Page-outer">
     <div id="Page" data-name="Page" class="Page">
       <div class="Frame-outer">
-        <div id="Frame" data-name="Desktop - 8" class="Frame">
+        <div id="Frame" data-name="Desktop - 11" class="Frame">
           <div class="Header-outer">
             <div id="Header" data-name="Header" class="Header">
               <div class="Frame-1-outer">
@@ -81,46 +106,71 @@
                   </div>
                 </div>
               </div>
-            </div>
-          </div>
-          <div class="Frame-56-outer">
-            <div id="Frame-56" data-name="Frame 56" class="Frame-56">
-              <form th:action="@{/save_org}" method="post" th:object="${org}">
-              <div style="margin-left: 150px;">
-                <div style=" width: 50%; margin-left: 50px;">
-                  <h2>Create Organization</h2>
-                </div>
-                <div class="form-group row">
-                  <div class="col-8">
-                    <input class="form-control" placeholder="Organization Name" th:field="*{organization_name}" type="text" required />
+              <div class="Frame-5-outer">
+                <div id="Frame-5" data-name="Frame 5" class="Frame-5">
+                  <div class="Logout-outer">
+                    <div th:replace="homepage/homepage::#Logout-1" id="Logout" data-name="Logout" class="Logout">
+                      <div  key="0">Logout</div>
+                    </div>
                   </div>
-                </div>
-                <div class="form-group row">
-                  <div class="col-8">
-                    <input class="form-control" placeholder="Registration Number" type="text" th:field="*{organization_id}" required />
+                  <div class="Meetings-outer">
+                    <div th:replace="homepage/homepage::#Meetings" id="Meetings" data-name="Meetings" class="Meetings">
+                      <div key="0"><a >Meetings</a></div>
+                    </div>
                   </div>
-                </div>
-                <div class="form-group row">
-                  <div class="col-8">
-                    <input class="form-control" placeholder="Office Admin Email" type="text" th:field="${user.userEmail}" required />
+                  <div class="Profile-outer">
+                    <div th:replace="homepage/homepage::#Profile" id="Profile" data-name="Profile" class="Profile">
+                      <div key="0"><a th:href="@{/my_profile}">Profile</a></div>
+                    </div>
                   </div>
-                </div>
-                <div class="form-group row">
-                  <div class="col-8">
-                    <textarea rows="5" cols="12" class="form-control" th:field="*{organization_desc}" th:text="Description"></textarea>
-                  </div>
-                </div>
-                <div style="display: flex">
-                  <div style="margin-left: 0%">
-                    <a class="btn btn-primary" th:href="@{/}">Cancel</a>
-                  </div>
-                  <div style="margin-left: 40%">
-                    <button class="btn btn-primary" type="submit">Create</button>
+                  <div class="Home-outer">
+                    <div th:replace="homepage/homepage::#Home" id="Home" data-name="Home" class="Home">
+                      <div key="0"><a th:href="@{/home}">Home</a></div>
+                    </div>
                   </div>
                 </div>
               </div>
-              </form>
             </div>
+          </div>
+
+          <div class="Frame-56-outer">
+            <form th:action="@{/edited_user} " method="post" th:object="${profile}">
+              <div id="Frame-56" data-name="Frame 56" class="Frame-56">
+                <div class="profile-div" id="profile-div">
+                  <img src="/edit.profile/images/profile.png" alt="" class="pic" id="pic" />
+                  <div class="profile-info">
+                    <p>Username: <span th:text="*{userName}"></span></p>
+                    <p>Gender: Gender</p>
+                    <p>Role: <span th:text="*{userRole}"></span></p>
+                    <p>Id: <span th:text="*{userId}"></span></p>
+                    <p>Email: <span th:text="*{userEmail}"></span></p>
+                  </div>
+                </div>
+                <div class="profile-edit">
+                  <div class="form-div">
+                    <div class="form-div-1">
+                      <h3 style="color: chocolate; text-align: center; font-size: 20px;">Edit Profile</h3>
+                      <input class="edit-field" id="Id" type="text" th:field="*{userId}" hidden />
+                      <input class="edit-field" id="org" type="text" th:field="*{organization}" hidden />
+                      <input class="edit-field" id="pass" type="password" th:field="*{userPassword}" hidden />
+                      <label for="name"
+                        style="color: bisque; font-size: 18px; font-font: Lucida-handwriting;">Username</label>
+                      <input class="edit-field" id="name" type="text" th:field="*{userName}" /><br /><br />
+                      <label for="role"
+                        style="color: bisque; font-size: 18px; font-font: Lucida-handwriting;">Role</label>
+                      <input class="edit-field" id="role" type="text" th:field="*{userRole}" /><br /><br />
+                      <label for="email"
+                        style="color: bisque; font-size: 18px; font-font: Lucida-handwriting;">E-mail</label>
+                      <input class="edit-field" id="email" type="email" th:field="*{userEmail}" /><br /><br />
+                      <label for="pass"
+                        style="color: bisque; font-size: 18px; font-font: Lucida-handwriting;">Phone</label>
+                      <input class="edit-field" id="phone" type="text"  /><br /><br />
+                    </div>
+                    <input class="save-button" type="submit" value="Save Changes" />
+                  </div>
+                </div>
+              </div>
+            </form>
           </div>
           <div class="Footer-outer">
             <div id="Footer" data-name="Footer" class="Footer">

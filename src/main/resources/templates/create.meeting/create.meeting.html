@@ -31,6 +31,11 @@
   <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:400,700">
   <link th:href="@{/create.meeting/create.meeting.css}" rel="stylesheet" media="all">
 
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.0/jquery.min.js"></script>
+  <script src="http://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.3.0/js/bootstrap-datepicker.js"></script>
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.8.0/css/bootstrap-datepicker.css" rel="stylesheet"/>
+  <input type="text" class="form-control date"/>
+
   <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
   <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
 
@@ -144,7 +149,6 @@
                   </div>
                   <div class="form-group row">
                     <div class="col-12">
-<!--                      <input th:field="*{coOwners}" class="form-control" placeholder="Co-ownners e.g Harun,Hassan,Sharon" required />-->
                       <select th:field="*{users}" class="js-example-basic-multiple" name="states[]" multiple="multiple" style="width: 100%">
                         <option th:each="i: ${users}" th:value="${i.userId}" th:text="${i.userName}"></option>
                       </select>

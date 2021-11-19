@@ -35,6 +35,20 @@
   <link href='//fonts.googleapis.com/css?family=Roboto:400,500,100,100italic,300,300italic,500italic,700,700italic,900,900italic,400italic' rel='stylesheet' type='text/css'>
   <!--//web-fonts-->
   <!--Calender-->
+  <script
+          src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datetimepicker/4.17.47/js/bootstrap-datetimepicker.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.9.0/js/bootstrap-datepicker.min.js"></script>
+  <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+  <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+  <script src="/webjars/bootstrap/4.3.1/js/bootstrap.min.js" type="text/javascript"></script>
+  <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css" rel="stylesheet">
+  <link href="/webjars/bootstrap/4.3.1/css/bootstrap.min.css" rel="stylesheet" type="text/css"/>
+  <script src="/webjars/jquery/3.0.0/jquery.min.js" type="text/javascript"></script>
+  <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
+  <script src="https://unpkg.com/gijgo@1.9.13/js/gijgo.min.js" type="text/javascript"></script>
+  <link href="https://unpkg.com/gijgo@1.9.13/css/gijgo.min.css" rel="stylesheet" type="text/css" />
+
+
   <script th:src="@{homepage/js/jquery-1.11.1.min.js}" type="text/javascript"></script>
   <link rel="stylesheet" th:href="@{homepage/css/clndr.css}" type="text/css" />
   <script th:src="@{homepage/js/underscore-min.js}" type="text/javascript"></script>
@@ -135,85 +149,23 @@
             <div id="Frame-99" data-name="Frame 99" class="Frame-99">
               <div class="Calendar">
                 <div class="cal1">
-                  <div class="clndr">
-                    <div class="clndr-controls">
-                      <div class="clndr-control-button">
-                        <p class="clndr-previous-button">previous</p>
+                  <div class="card" style="width: 100%;">
+                    <img src="https://picsum.photos/200/100" class="card-img-top" alt="...">
+                    <div class="card-body">
+                      <h5 class="card-title" style="font-size: 25px">Meeting Calendar</h5>
+<!--                      <p class="card-text" style="font-size: 18px">Some quick example text to build on the card title and make up the bulk of the card's content.</p>-->
+                      <form th:action="@{/calendar}" method="post">
+                      <div>
+                        <input id="datepicker" name="date" />
                       </div>
-                      <div class="month">SEPTEMBER 2015</div>
-                      <div class="clndr-control-button rightalign">
-                        <p class="clndr-next-button">next</p>
-                      </div>
+                      <br/>
+                      <br/>
+                      <button type="submit" class="btn btn-outline-dark" style="font-size: 15px">View Days Meetings</button><br/><br/>
+                      </form>
+                      <a th:href="@{/my_meeting}" class="btn btn-outline-dark" style="font-size: 15px">View My Meetings</a><br/><br/>
+                      <a th:href="@{/boardroom}" class="btn btn-outline-dark" style="font-size: 15px">View Boardrooms</a><br/><br/>
+                      <a th:href="@{/new_meet}" class="btn btn-outline-dark" style="font-size: 15px">Schedule Meeting</a><br/><br/>
                     </div>
-                    <table class="clndr-table">
-                      <thead>
-                      <tr class="header-days">
-                        <td class="header-day">SUN</td>
-                        <td class="header-day">MON</td>
-                        <td class="header-day">TUE</td>
-                        <td class="header-day">WED</td>
-                        <td class="header-day">THU</td>
-                        <td class="header-day">FRI</td>
-                        <td class="header-day">SAT</td>
-                      </tr>
-                      </thead>
-                      <tbody>
-                      <tr>
-                        <td class="day past adjacent-month last-month calendar-day-2015-04-26"><div class="day-contents">26</div></td>
-                        <td class="day past adjacent-month last-month calendar-day-2015-04-27"><div class="day-contents">27</div></td>
-                        <td class="day past adjacent-month last-month calendar-day-2015-04-28"><div class="day-contents">28</div></td>
-                        <td class="day past adjacent-month last-month calendar-day-2015-04-29"><div class="day-contents">29</div></td>
-                        <td class="day past adjacent-month last-month calendar-day-2015-04-30"><div class="day-contents">30</div></td>
-                        <td class="day past calendar-day-2015-05-01"><div class="day-contents">1</div></td>
-                        <td class="day past calendar-day-2015-05-02"><div class="day-contents">2</div></td>
-                      </tr>
-                      <tr>
-                        <td class="day past calendar-day-2015-05-03"><div class="day-contents">3</div></td>
-                        <td class="day past calendar-day-2015-05-04"><div class="day-contents">4</div></td>
-                        <td class="day past calendar-day-2015-05-05"><div class="day-contents">5</div></td>
-                        <td class="day past calendar-day-2015-05-06"><div class="day-contents">6</div></td>
-                        <td class="day past calendar-day-2015-05-07"><div class="day-contents">7</div></td>
-                        <td class="day past calendar-day-2015-05-08"><div class="day-contents">8</div></td>
-                        <td class="day past calendar-day-2015-05-09"><div class="day-contents">9</div></td>
-                      </tr>
-                      <tr>
-                        <td class="day past event calendar-day-2015-05-10"><div class="day-contents">10</div></td>
-                        <td class="day past event calendar-day-2015-05-11"><div class="day-contents">11</div></td>
-                        <td class="day past event calendar-day-2015-05-12"><div class="day-contents">12</div></td>
-                        <td class="day past event calendar-day-2015-05-13"><div class="day-contents">13</div></td>
-                        <td class="day today event calendar-day-2015-05-14"><div class="day-contents">14</div></td>
-                        <td class="day calendar-day-2015-05-15"><div class="day-contents">15</div></td>
-                        <td class="day calendar-day-2015-05-16"><div class="day-contents">16</div></td>
-                      </tr>
-                      <tr>
-                        <td class="day calendar-day-2015-05-17"><div class="day-contents">17</div></td>
-                        <td class="day calendar-day-2015-05-18"><div class="day-contents">18</div></td>
-                        <td class="day calendar-day-2015-05-19"><div class="day-contents">19</div></td>
-                        <td class="day calendar-day-2015-05-20"><div class="day-contents">20</div></td>
-                        <td class="day event calendar-day-2015-05-21"><div class="day-contents">21</div></td>
-                        <td class="day event calendar-day-2015-05-22"><div class="day-contents">22</div></td>
-                        <td class="day event calendar-day-2015-05-23"><div class="day-contents">23</div></td>
-                      </tr>
-                      <tr>
-                        <td class="day calendar-day-2015-05-24"><div class="day-contents">24</div></td>
-                        <td class="day calendar-day-2015-05-25"><div class="day-contents">25</div></td>
-                        <td class="day calendar-day-2015-05-26"><div class="day-contents">26</div></td>
-                        <td class="day calendar-day-2015-05-27"><div class="day-contents">27</div></td>
-                        <td class="day calendar-day-2015-05-28"><div class="day-contents">28</div></td>
-                        <td class="day calendar-day-2015-05-29"><div class="day-contents">29</div></td>
-                        <td class="day calendar-day-2015-05-30"><div class="day-contents">30</div></td>
-                      </tr>
-                      <tr>
-                        <td class="day calendar-day-2015-05-31"><div class="day-contents">31</div></td>
-                        <td class="day adjacent-month next-month calendar-day-2015-06-01"><div class="day-contents">1</div></td>
-                        <td class="day adjacent-month next-month calendar-day-2015-06-02"><div class="day-contents">2</div></td>
-                        <td class="day adjacent-month next-month calendar-day-2015-06-03"><div class="day-contents">3</div></td>
-                        <td class="day adjacent-month next-month calendar-day-2015-06-04"><div class="day-contents">4</div></td>
-                        <td class="day adjacent-month next-month calendar-day-2015-06-05"><div class="day-contents">5</div></td>
-                        <td class="day adjacent-month next-month calendar-day-2015-06-06"><div class="day-contents">6</div></td>
-                      </tr>
-                      </tbody>
-                    </table>
                   </div>
                 </div>
 
@@ -224,23 +176,23 @@
                   <div class="UserManagerButtons">
                     <div class="UserManagerButton"><a th:href="@{/my_profile}">My Profile</a></div>
                     <div class="UserManagerButton"><a th:href="@{/list_users}">Users List</a></div>
-                    <div class="UserManagerButton"><a th:href="@{/add_user}">Add User</a></div>
+                    <div sec:authenticate="hasAnyAuthority('admin')" class="UserManagerButton"><a sec:authorize="hasAnyAuthority('admin')" th:href="@{/add_user}">Add User</a></div>
                   </div>
                 </div>
                 <div class="EventManager">
                   <div class="EventManagerTitle"><h3>Events Manager</h3></div>
                   <div class="EventManagerButtons">
                     <div class="EventManagerButton"><a th:href="@{/new_meet}">Schedule Meeting</a></div>
-                    <div class="EventManagerButton"><a th:href="@{/meeting}">My Meetings</a></div>
+                    <div class="EventManagerButton"><a th:href="@{/my_meeting}">My Meetings</a></div>
                     <div class="EventManagerButton"><a th:href="@{/meeting}">All Meetings</a></div>
                   </div>
                   <div class="EventManagerButtons">
                     <div class="EventManagerButton"><a th:href="@{/boardroom}">Boardrooms</a></div>
-                    <div class="EventManagerButton"><a th:href="@{/new_board}">Add Boardroom</a></div>
+                    <div sec:authenticate="hasAnyAuthority('admin')" class="EventManagerButton"><a sec:authorize="hasAnyAuthority('admin')" th:href="@{/new_board}">Add Boardroom</a></div>
                   </div>
                 </div>
                 <div class="Extras">
-                  <div class="ExtraLinks"><a th:href="@{/get_logs}">Get Logs</a></div>
+                  <div sec:authenticate="hasAnyAuthority('admin')" class="ExtraLinks"><a sec:authorize="hasAnyAuthority('admin')" th:href="@{/get_logs}">Get Logs</a></div>
                   <div class="ExtraLinks" >
                     <a
                           href="javascript: document.logoutForm1.submit()">Logout</a>
@@ -435,5 +387,11 @@
   </div>
 
 </body>
+<script type="text/javascript">
+  $('#datepicker').datepicker({
+    showOtherMonths: true,
+    format: 'yyyy-mm-dd'
+  });
+</script>
 
 </html>

@@ -1,5 +1,6 @@
 package com.tracom.office_planner.User;
 
+import com.azure.cosmos.implementation.guava25.collect.FluentIterable;
 import net.bytebuddy.utility.RandomString;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
@@ -8,16 +9,14 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.mail.MessagingException;
 import javax.servlet.http.HttpServletRequest;
 import java.security.Principal;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Controller
 public class UserController {
@@ -29,16 +28,22 @@ public class UserController {
 
 
     @GetMapping("/list_users")
-    public String viewUsers(Model model){
-        return viewUsersList(model, null,1,"userName","asc");
+    public String viewUsers(HttpServletRequest request,Model model){
+        return viewUsersList(request,model, null,1,"userName","asc");
     }
 
     @GetMapping("/list_users/page/{page}")
-    public String viewUsersList(Model model, @Param("keyword") String keyword,
+    public String viewUsersList(HttpServletRequest request,Model model, @Param("keyword") String keyword,
                                 @PathVariable(name = "page") int page,
                                 @Param("field") String field, @Param("dir") String dir) {
+        Principal principal = request.getUserPrincipal();
+        String name = principal.getName();
+        User currentUser = userRepo.findUserByName(name);
         Page<User> content = userService.listAll(keyword,page,dir,field);
-        List<User> listUsers = content.getContent();
+        List<User> listUser = content.getContent();
+        List<User> listUsers = FluentIterable.from(listUser)
+                        .filter(u -> u.getOrganization() == currentUser.getOrganization() && u != currentUser)
+                        .toList();
         model.addAttribute("userList", listUsers);
         model.addAttribute("keyword",keyword);
         model.addAttribute("currentPage", page);
@@ -51,10 +56,10 @@ public class UserController {
     }
 
 
-    @RequestMapping(value = "/delete_user/{user_id}")
+    @RequestMapping(value = "/delete_user/{user_id}", method = RequestMethod.DELETE)
     public String deleteUser(@PathVariable(name = "user_id") int id) {
         userRepo.deleteById(id);
-        return "redirect: user.manager/userManager";
+        return "redirect:/list_users";
     }
 
     @GetMapping("/add_user")
@@ -72,8 +77,12 @@ public class UserController {
         String token = RandomString.make(10);
         String resetlink = Utility.getSiteUrl(request)+"/register?token="+token;
         System.out.println(resetlink);
+        Principal principal = request.getUserPrincipal();
+        String name = principal.getName();
+        User user = userRepo.findUserByName(name);
         try {
             us.setToken(token);
+            us.setOrganization(user.getOrganization());
             userRepo.save(us);
             userService.sendRegisterMail(us,resetlink);
             model.addAttribute("message", "Email sent Successfully");
@@ -85,22 +94,29 @@ public class UserController {
         }
 
         System.out.println(resetlink);
-        return "redirect: user.manager/userManager";
+        return "redirect:/list_users";
     }
 
 
+    @PostMapping("/edited_profile")
+    public String saveProfile(User user){
+        user.setOrganization(userRepo.findById(user.getUserId()).get().getOrganization());
+        user.setUserPassword(userRepo.findById(user.getUserId()).get().getUserPassword());
+        userRepo.save(user);
+        return "redirect:/?logout";
+    }
+
     @PostMapping("/edited_user")
     public String saveEdited(User user){
-        BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
-        String encoded = encoder.encode(user.getUserPassword());
-        user.setUserPassword(encoded);
+        user.setOrganization(userRepo.findById(user.getUserId()).get().getOrganization());
+        user.setUserPassword(userRepo.findById(user.getUserId()).get().getUserPassword());
         userRepo.save(user);
-        return "homepage/homepage";
+        return "redirect:/list_users";
     }
 
     @RequestMapping("/edit_user/{user_id}")
     public ModelAndView userProfile(@PathVariable(name = "user_id") Integer user_id){
-        ModelAndView modelAndView = new ModelAndView("edit.profile/editProfile");
+        ModelAndView modelAndView = new ModelAndView("edit.profile/editUser");
         User user = userRepo.getById(user_id);
         modelAndView.addObject("profile",user);
         return modelAndView;

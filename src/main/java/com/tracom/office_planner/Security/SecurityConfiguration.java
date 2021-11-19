@@ -44,9 +44,18 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
         http
 //                .authorizeRequests().anyRequest().permitAll();
                 .authorizeRequests()
-                .antMatchers("/delete_user/**","/edit_user/**","/add_user")
+                .antMatchers("/delete_user/**",
+                        "/edit_user/**","/add_user",
+                        "/new_board","/delete_board/**",
+                        "/edit/**", "/delete_meet/**",
+                        "/reschedule/**")
                 .hasAuthority("admin")
-                .antMatchers("/list_users","/new_meet","/meeting","/home")
+                .antMatchers("/list_users","/new_meet",
+                        "/meeting","/home",
+                        "/boardroom","/my_meeting",
+                        "/boardroom/page/**","meeting/page/**",
+                        "/my_meeting/page/**","/list_users/page/**",
+                        "/calendar","/my_profile")
                 .authenticated()
                 .anyRequest()
                 .permitAll()

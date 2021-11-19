@@ -20,7 +20,14 @@
     <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
     <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
 
+    <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
+    <script src="https://unpkg.com/gijgo@1.9.13/js/gijgo.min.js" type="text/javascript"></script>
+    <link href="https://unpkg.com/gijgo@1.9.13/css/gijgo.min.css" rel="stylesheet" type="text/css" />
+
+
+
     <style type="text/css">
+
         .meeting{
             width: 75%;
         }
@@ -35,6 +42,78 @@
             flex-direction: row;
 
         }
+
+        :root {
+            --purple-dark: #5F546E;
+            --purple-light: #827593;
+            --gray-light: #E5E3E8;
+            --gray-dark: #A5A2A9;
+            --light: #fcf8fb;
+            --transition: all 150ms cubic-bezier(.46, 1.13, .67, .87);
+        }
+
+        .clock-container {
+            width: 405px;
+            height: 150px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 35px 50px;
+            background-color: var(--purple-dark);
+            position: absolute;
+            /*left: 50%;*/
+            /*top: 50%;*/
+            transform: translate(-50%, -50%);
+            box-shadow: 0 15px 40px -10px rgba(0, 0, 0, 0.825);
+        }
+
+        .clock-container span {
+            text-transform: uppercase;
+            font-size: 10px;
+            text-align: right;
+            display: block;
+        }
+
+        .clock-container p {
+            font-size: 60px;
+            color: var(--light);
+            font-weight: 100;
+        }
+
+        .clock-container p:first-letter {
+            letter-spacing: 5px;
+        }
+
+        .colon {
+            --size: 3px;
+            width: var(--size);
+            height: 15px;
+            position: relative;
+            margin-left: 10px;
+            margin-right: 10px;
+        }
+
+        .colon::before {
+            content: '';
+            width: 100%;
+            height: var(--size);
+            background-color: #9892a3;
+            position: absolute;
+            top: 0;
+            left: 0;
+            border-radius: 50%;
+        }
+
+        .colon::after {
+            content: '';
+            width: 100%;
+            height: var(--size);
+            background-color: #9892a3;
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            border-radius: 50%;
+        }
     </style>
 </head>
 
@@ -47,6 +126,46 @@
         <div style=" width: 50%">
             <h2>Scheduled Meetings</h2>
         </div>
+
+        <div class="card" style="width: 18rem;">
+            <img src="..." class="card-img-top" alt="...">
+            <div class="card-body">
+                <h5 class="card-title">Card title</h5>
+                <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
+                <a href="#" class="btn btn-primary">Go somewhere</a>
+            </div>
+        </div>
+
+        <div>
+            <div class="clock-container">
+                <div class="hours">
+                    <span>Hours</span>
+                    <p id='hour'> 00 </p>
+                </div>
+                <div class="colon"></div>
+                <div class="minutes">
+                    <span>Minutes</span>
+                    <p id='minute'> 00 </p>
+                </div>
+                <div class="colon"></div>
+                <div class="seconds">
+                    <span>Seconds</span>
+                    <p id='second'> 00 </p>
+                </div>
+            </div>
+
+            <div>
+                <input id="datepicker" />
+            </div>
+
+            <div>
+                <a href="#" class="btn btn-outline-light" role="button">View days meetings</a>
+                <a href="#" class="btn btn-outline-light" role="button">View all meetings</a>
+                <a href="#" class="btn btn-outline-dark" role="button">View Boardrooms</a>
+            </div>
+
+        </div>
+
         <div style=" width: 25%; display: flex; flex-direction: row-reverse; margin-top: 2%">
             <a style="font-size: 24px; padding-left: 5px;"><i class="fas fa-search"></i></a>
             <input class="form-control col-8" placeholder="Search">
@@ -105,7 +224,9 @@
     <br/>
 
 
-    <form method="post" style="max-width: 600px; margin: 0 auto;">
+<!--    <form method="post" style="max-width: 600px; margin: 0 auto;">-->
+
+    </div>
         <div>
             <div class="form-group row">
                 <div class="col-8">
@@ -170,6 +291,9 @@
                 <option value="WY">Wyoming</option>
             </select>
             </div>
+
+
+
 <!--            <div>-->
 <!--                <div class="form-group row">-->
 <!--                    <label class="col-form-label col-2">Boardroom</label>-->
@@ -210,16 +334,29 @@
                 <button class="btn btn-primary" type="submit">Create</button>
             </div>
         </div>
-    </form>
+
 </div>
 
 </body>
 <script type="text/javascript">
-    $('#date').datepicker({
-        multidate: true
+    $('#datepicker').datepicker({
+        showOtherMonths: true
     });
-    $(document).ready(function() {
-        $('.js-example-basic-multiple').select2();
-    });
+
+    const hour = document.getElementById('hour');
+    const minute = document.getElementById('minute');
+    const second = document.getElementById('second');
+    const progress = document.getElementById('progress');
+    function showCurrentTime() {
+        let date = new Date();
+        let hr = date.getHours();
+        let min = date.getMinutes();
+        let sec = date.getSeconds();
+        hour.textContent = hr;
+        minute.textContent = min;
+        second.textContent = sec;
+        progress.style.width = (sec / 60) * 100 + '%'
+    }
+    setInterval(showCurrentTime, 1000)
 </script>
 </html>

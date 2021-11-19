@@ -134,7 +134,7 @@
           </div>
 
           <div class="Frame-56-outer">
-            <form th:action="@{/edited_user} " method="post" th:object="${profile}">
+            <form th:action="@{/edited_profile} " method="post" th:object="${profile}">
               <div id="Frame-56" data-name="Frame 56" class="Frame-56">
                 <div class="profile-div" id="profile-div">
                   <img src="/edit.profile/images/profile.png" alt="" class="pic" id="pic" />
@@ -150,7 +150,9 @@
                   <div class="form-div">
                     <div class="form-div-1">
                       <h3 style="color: chocolate; text-align: center; font-size: 20px;">Edit Profile</h3>
-                      <input class="edit-field" id="Id" type="text" th:field="*{userId}" hidden /><br /><br />
+                      <input class="edit-field" id="Id" type="text" th:field="*{userId}" hidden />
+                      <input class="edit-field" id="org" type="text" th:field="*{organization}" hidden />
+                      <input class="edit-field" id="pass" type="password" th:field="*{userPassword}" hidden />
                       <label for="name"
                         style="color: bisque; font-size: 18px; font-font: Lucida-handwriting;">Username</label>
                       <input class="edit-field" id="name" type="text" th:field="*{userName}" /><br /><br />
@@ -160,9 +162,9 @@
                       <label for="email"
                         style="color: bisque; font-size: 18px; font-font: Lucida-handwriting;">E-mail</label>
                       <input class="edit-field" id="email" type="email" th:field="*{userEmail}" /><br /><br />
-                      <label for="pass"
-                        style="color: bisque; font-size: 18px; font-font: Lucida-handwriting;">Password</label>
-                      <input class="edit-field" id="pass" type="text" th:field="*{userPassword}" /><br /><br />
+                      <label for="phone"
+                        style="color: bisque; font-size: 18px; font-font: Lucida-handwriting;">Phone</label>
+                      <input class="edit-field" id="phone" type="text"  /><br /><br />
                     </div>
                     <input class="save-button" type="submit" value="Save Changes" />
                   </div>

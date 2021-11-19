@@ -11,5 +11,5 @@ public interface BoardRepository extends JpaRepository<BoardRoom, Integer> {
     @Query("FROM BoardRoom b WHERE b.boardName=?1")
     BoardRoom findByName(String board_name);
     @Query("SELECT b FROM BoardRoom b WHERE CONCAT(b.boardName, ' ' ,b.boardId,' ',b.boardLocation,' ',b.Capacity) LIKE %?1%")
-    public Page<BoardRoom> search(String keyword, Pageable pageable);
+    Page<BoardRoom> search(String keyword, Pageable pageable);
 }

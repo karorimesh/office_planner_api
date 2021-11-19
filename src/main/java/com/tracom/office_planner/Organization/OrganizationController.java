@@ -17,12 +17,19 @@ import javax.servlet.http.HttpServletRequest;
 
 @Controller
 public class OrganizationController {
-    @Autowired
+
     private OrganizationRepo organizationRepo;
-    @Autowired
+
     private UserRepository userRepo;
-    @Autowired
+
     private UserServiceClass userService;
+
+    @Autowired
+    public OrganizationController(OrganizationRepo organizationRepo, UserRepository userRepo, UserServiceClass userService) {
+        this.organizationRepo = organizationRepo;
+        this.userRepo = userRepo;
+        this.userService = userService;
+    }
 
     @GetMapping("/new_org")
     public String createOrg(Model model){

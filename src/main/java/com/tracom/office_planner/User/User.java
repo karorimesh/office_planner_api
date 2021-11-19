@@ -12,7 +12,6 @@ import java.util.List;
 @Entity
 @Table(name = "user")
 //Lombok
-@ToString
 @AllArgsConstructor
 @NoArgsConstructor
 @Getter
@@ -44,6 +43,10 @@ public class User {
 
     @ManyToMany(mappedBy = "users")
     private List<Meeting> meetings = new ArrayList<Meeting>();
+
+    public User(int userId) {
+        this.userId = userId;
+    }
 
     public int getUserId() {
         return userId;
@@ -99,5 +102,19 @@ public class User {
         this.userRole = userRole;
         this.userEmail = userEmail;
         this.employee = employee;
+    }
+
+    @Override
+    public String toString() {
+        return "User{" +
+                "userId=" + userId +
+                ", userName='" + userName + '\'' +
+                ", userPassword='" + userPassword + '\'' +
+                ", userRole='" + userRole + '\'' +
+                ", userEmail='" + userEmail + '\'' +
+                ", token='" + token + '\'' +
+                ", employee=" + employee +
+                ", organization=" + organization +
+                '}';
     }
 }

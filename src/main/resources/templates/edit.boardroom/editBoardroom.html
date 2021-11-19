@@ -5,6 +5,17 @@
   <meta http-equiv="Content-Type" content="text/html" charset="utf-8" />
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
   <script src="https://ajax.googleapis.com/ajax/libs/webfont/1.6.26/webfont.js"></script>
+  <link href="/webjars/bootstrap/4.3.1/css/bootstrap.min.css" rel="stylesheet" type="text/css" />
+  <script src="/webjars/jquery/3.0.0/jquery.min.js" type="text/javascript"></script>
+  <script src="/webjars/bootstrap/4.3.1/js/bootstrap.min.js" type="text/javascript"></script>
+  <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datetimepicker/4.17.47/css/bootstrap-datetimepicker.css"
+        rel="stylesheet">
+  <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.6.3/css/all.css"
+        integrity="sha384-UHRtZLI+pbxtHCWp1t77Bi1L4ZtiqrqD80Kn4Z8NTSRyMA2Fd33n5dQ8lWUE00s/" crossorigin="anonymous">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.24.0/moment.min.js"></script>
 
   <meta name="viewport" content="width=device-width, height=device-height, initial-scale=1, maximum-scale=5" />
 
@@ -85,8 +96,8 @@
                     </div>
                   </div>
                   <div class="Meetings-outer">
-                    <div id="Meetings" data-name="Meetings" class="Meetings">
-                      <div th:replace="homepage/homepage::#Meetings" key="0">Meetings</div>
+                    <div th:replace="homepage/homepage::#Meetings" id="Meetings" data-name="Meetings" class="Meetings">
+                      <div  key="0">Meetings</div>
                     </div>
                   </div>
                   <div class="Profile-outer">
@@ -105,131 +116,51 @@
           </div>
           <div class="Frame-56-outer">
             <div id="Frame-56" data-name="Frame 56" class="Frame-56">
-              <div class="Frame-59-outer">
-                <div id="Frame-59" data-name="Frame 59" class="Frame-59">
-                  <div class="Edit-Boardroom-outer">
-                    <div id="Edit-Boardroom" data-name="Edit Boardroom" class="Edit-Boardroom">
-                      <div key="0">Edit Boardroom</div>
+              <form th:action="@{/save_board}" th:object="${board}" method="post">
+                <div class="board-form" style="width: 75%; height: 90%; margin-left: 200px">
+                  <div style=" width: 50%; margin-left: 50px">
+                    <h2>Edit Boardroom</h2>
+                  </div>
+                  <div class="form-group row">
+                    <div class="col-8">
+                      <input th:field="*{boardName}" class="form-control" placeholder="Boardroom Name" required />
+                      <input th:field="*{boardId}" class="form-control" placeholder="Boardroom Id" required readonly type="hidden"/>
+                      <input th:field="*{organization}" class="form-control" placeholder="Boardroom Id" required readonly type="hidden"/>
                     </div>
                   </div>
-                </div>
-              </div>
-              <div class="Frame-45-outer">
-                <div id="Frame-45" data-name="Frame 45" class="Frame-45">
-                  <div class="Boardroom-Name-outer">
-                    <div id="Boardroom-Name" data-name="Boardroom Name" class="Boardroom-Name">
-                      <div key="0">Boardroom Name</div>
+                  <div class="form-group row">
+                    <div class="col-8">
+                      <input th:field="*{boardLocation}" class="form-control" placeholder="Boardroom Location" type="text" required />
                     </div>
                   </div>
-                </div>
-              </div>
-              <div class="Frame-61-outer">
-                <div id="Frame-61" data-name="Frame 61" class="Frame-61">
-                  <div class="Boardroom-Location-outer">
-                    <div id="Boardroom-Location" data-name="Boardroom Location" class="Boardroom-Location">
-                      <div key="0">Boardroom Location</div>
+                  <div class="form-group row">
+                    <div class="col-8">
+                      <input th:field="*{capacity}" class="form-control" placeholder="Boardroom Capacity" type="number" required />
                     </div>
                   </div>
-                </div>
-              </div>
-              <div class="Frame-46-outer">
-                <div id="Frame-46" data-name="Frame 46" class="Frame-46">
-                  <div class="Boardroom-Capacity-outer">
-                    <div id="Boardroom-Capacity" data-name="Boardroom Capacity" class="Boardroom-Capacity">
-                      <div key="0">Boardroom Capacity</div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-              <div class="Frame-47-outer">
-                <div id="Frame-47" data-name="Frame 47" class="Frame-47">
-                  <div class="Boardroom-Features-outer">
-                    <div id="Boardroom-Features" data-name="Boardroom Features" class="Boardroom-Features">
-                      <div key="0">Boardroom Features</div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-              <div class="Frame-83-outer">
-                <div id="Frame-83" data-name="Frame 83" class="Frame-83">
-                  <div class="Frame-82-outer">
-                    <div id="Frame-82" data-name="Frame 82" class="Frame-82">
-                      <div class="Checkbox-with-label-2-outer">
-                        <div id="Checkbox-with-label-2" data-name="Checkbox with label" class="Checkbox-with-label-2">
-                          <div class="TV-outer">
-                            <div id="TV" data-name="TV" class="TV">
-                              <div key="0">TV</div>
-                            </div>
-                          </div>
-                          <div class="Checkbox-2-outer">
-                            <div id="Checkbox-2" data-name="Checkbox" class="Checkbox-2">
-                              <div class="Vector-14-outer">
-                                <img id="Vector-14" data-name="Vector" alt="Vector" class="Vector-14">
-                              </div>
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-                      <div class="Checkbox-with-label-1-outer">
-                        <div id="Checkbox-with-label-1" data-name="Checkbox with label" class="Checkbox-with-label-1">
-                          <div class="Whiteboard-outer">
-                            <div id="Whiteboard" data-name="Whiteboard" class="Whiteboard">
-                              <div key="0">Whiteboard</div>
-                            </div>
-                          </div>
-                          <div class="Checkbox-1-outer">
-                            <div id="Checkbox-1" data-name="Checkbox" class="Checkbox-1">
-                              <div class="Vector-13-outer">
-                                <img id="Vector-13" data-name="Vector" alt="Vector" class="Vector-13">
-                              </div>
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-                      <div class="Checkbox-with-label-outer">
-                        <div id="Checkbox-with-label" data-name="Checkbox with label" class="Checkbox-with-label">
-                          <div class="Confrence-phone-outer">
-                            <div id="Confrence-phone" data-name="Confrence phone" class="Confrence-phone">
-                              <div key="0">Confrence phone</div>
-                            </div>
-                          </div>
-                          <div class="Checkbox-outer">
-                            <div id="Checkbox" data-name="Checkbox" class="Checkbox">
-                            </div>
-                          </div>
-                        </div>
+                  <div>
+                    <div class="form-group row" style="color: antiquewhite">
+                      <label class="col-form-label col-2">Features:</label>
+                      <div>
+                        <input th:field="*{TV}" id="tv" class=" col-1" type="checkbox" value="true"/>
+                        <label class="col-5">TV</label><br>
+                        <input th:field="*{whiteboard}" class=" col-1" type="checkbox" id="whiteboard" value="true"/>
+                        <label class="col-5">WhiteBoard</label><br>
+                        <input th:field="*{phone}" class=" col-1" type="checkbox" id="phone" value="true"/>
+                        <label class="col-5"> Phone</label><br>
                       </div>
                     </div>
                   </div>
-                  <div class="Features-outer">
-                    <div id="Features" data-name="Features" class="Features">
-                      <div key="0">Features</div>
+                  <div class="form-group row">
+                    <div class="col-8">
+                      <textarea th:field="*{others}" rows="5" cols="12" class="form-control">Other Features/Description</textarea>
                     </div>
                   </div>
-                </div>
-              </div>
-              <div class="Frame-60-1-outer">
-                <div id="Frame-60-1" data-name="Frame 60" class="Frame-60-1">
-                  <div class="Others-characteristi-outer">
-                    <div id="Others-characteristi" data-name="Others characteristics" class="Others-characteristi">
-                      <div key="0">Others characteristics</div>
-                    </div>
+                  <div>
+                    <button class="btn btn-primary" type="submit" style="margin-left: 50%">Edit</button>
                   </div>
                 </div>
-              </div>
-              <div class="Frame-57-outer">
-                <div id="Frame-57" data-name="Frame 57" class="Frame-57">
-                  <div class="Frame-60-outer">
-                    <div id="Frame-60" data-name="Frame 60" class="Frame-60">
-                      <div class="Save-Changes-outer">
-                        <div id="Save-Changes" data-name="Save Changes" class="Save-Changes">
-                          <div key="0">Save Changes</div>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
+              </form>
             </div>
           </div>
           <div class="Footer-outer">

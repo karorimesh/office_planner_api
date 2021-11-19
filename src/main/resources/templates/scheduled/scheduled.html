@@ -1,5 +1,6 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
-<html prefix="og: http://ogp.me/ns#" lang="en" style="height: 100%" xmlns:th="http://www.thymeleaf.org">
+<html prefix="og: http://ogp.me/ns#" lang="en" style="height: 100%" xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="https://www.thymeleaf.org/thymeleaf-extras-springsecurity5">
 
 <head>
   <meta http-equiv="Content-Type" content="text/html" charset="utf-8" />
@@ -171,9 +172,9 @@
                       </div>
                     </div>
                   </div>
-                  <div style="width: 10%"><a th:href="@{'/reschedule/'+${m.meeting.meetId}}" style="font-size: 40px"><i class="fas fa-edit"></i></a>
+                  <div sec:authenticate="hasAnyAuthority('admin')" style="width: 10%"><a sec:authorize="hasAnyAuthority('admin')" th:href="@{'/reschedule/'+${m.meeting.meetId}}" style="font-size: 40px"><i class="fas fa-edit"></i></a>
                   </div>
-                  <div style="width: 10%"><a th:href="@{'/delete_meet/'+${m.meeting.meetId}}" style="font-size: 40px"><i class="fas fa-trash"></i></a>
+                  <div sec:authenticate="hasAnyAuthority('admin')" style="width: 10%"><a sec:authorize="hasAnyAuthority('admin')" th:href="@{'/delete_meet/'+${m.meeting.meetId}}" style="font-size: 40px"><i class="fas fa-trash"></i></a>
                   </div>
                   <div id="details" style="background-color: rgba(255,255,255,0.7); width: 50%; margin-left: 25%">
                     <p>Meeting Name: <span th:text="${m.meeting.meetName}"></span></p>
