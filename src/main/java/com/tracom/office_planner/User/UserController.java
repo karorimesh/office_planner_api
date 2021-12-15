@@ -1,6 +1,7 @@
 package com.tracom.office_planner.User;
 
 import com.azure.cosmos.implementation.guava25.collect.FluentIterable;
+import com.tracom.office_planner.MeetingsLog.PlannerLogger;
 import net.bytebuddy.utility.RandomString;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
@@ -14,7 +15,9 @@ import org.springframework.web.servlet.ModelAndView;
 
 import javax.mail.MessagingException;
 import javax.servlet.http.HttpServletRequest;
+import java.io.UnsupportedEncodingException;
 import java.security.Principal;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -39,10 +42,10 @@ public class UserController {
         Principal principal = request.getUserPrincipal();
         String name = principal.getName();
         User currentUser = userRepo.findUserByName(name);
-        Page<User> content = userService.listAll(keyword,page,dir,field);
+        Page<User> content = userService.listAll(keyword,page,dir,field, currentUser.getOrganization());
         List<User> listUser = content.getContent();
         List<User> listUsers = FluentIterable.from(listUser)
-                        .filter(u -> u.getOrganization() == currentUser.getOrganization() && u != currentUser)
+                        .filter(u -> u != currentUser)
                         .toList();
         model.addAttribute("userList", listUsers);
         model.addAttribute("keyword",keyword);
@@ -52,12 +55,17 @@ public class UserController {
         model.addAttribute("sortDir", dir);
         model.addAttribute("sortField",field);
         model.addAttribute("reverseDir",dir.equals("asc")?"desc":"asc");
-        return "user.manager/userManager";
+        return "userManager";
     }
 
 
-    @RequestMapping(value = "/delete_user/{user_id}", method = RequestMethod.DELETE)
-    public String deleteUser(@PathVariable(name = "user_id") int id) {
+    @RequestMapping(value = "/delete_user/{user_id}")
+    public String deleteUser(@PathVariable(name = "user_id") int id, HttpServletRequest request) {
+        Principal principal = request.getUserPrincipal();
+        String name = principal.getName();
+        User user = userRepo.findUserByName(name);
+        User deletedUser = userRepo.getById(id);
+        PlannerLogger.deleteUser(deletedUser,user);
         userRepo.deleteById(id);
         return "redirect:/list_users";
     }
@@ -66,7 +74,7 @@ public class UserController {
     public String showAddUsersForm(Model model) {
 
         model.addAttribute("user", new User());
-        return "create.user/createUser";
+        return "createUser";
     }
 
     /*Create a @PostMapping function to save new user
@@ -85,16 +93,21 @@ public class UserController {
             us.setOrganization(user.getOrganization());
             userRepo.save(us);
             userService.sendRegisterMail(us,resetlink);
+            PlannerLogger.createUser(us);
             model.addAttribute("message", "Email sent Successfully");
             throw new MessagingException("Could not send email please check to ensure it's valid");
-        }  catch ( MessagingException e){
+        }
+        catch ( MessagingException e){
             model.addAttribute("error",e.getMessage());
-        }catch (DataIntegrityViolationException e){
+        }
+        catch (DataIntegrityViolationException e){
             model.addAttribute("error","Email already exists");
         }
+        catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+        }
 
-        System.out.println(resetlink);
-        return "redirect:/list_users";
+        return "redirect:/add_user";
     }
 
 
@@ -103,6 +116,7 @@ public class UserController {
         user.setOrganization(userRepo.findById(user.getUserId()).get().getOrganization());
         user.setUserPassword(userRepo.findById(user.getUserId()).get().getUserPassword());
         userRepo.save(user);
+        PlannerLogger.updateUser(user);
         return "redirect:/?logout";
     }
 
@@ -111,12 +125,13 @@ public class UserController {
         user.setOrganization(userRepo.findById(user.getUserId()).get().getOrganization());
         user.setUserPassword(userRepo.findById(user.getUserId()).get().getUserPassword());
         userRepo.save(user);
+        PlannerLogger.updateUser(user);
         return "redirect:/list_users";
     }
 
     @RequestMapping("/edit_user/{user_id}")
     public ModelAndView userProfile(@PathVariable(name = "user_id") Integer user_id){
-        ModelAndView modelAndView = new ModelAndView("edit.profile/editUser");
+        ModelAndView modelAndView = new ModelAndView("editUser");
         User user = userRepo.getById(user_id);
         modelAndView.addObject("profile",user);
         return modelAndView;
@@ -124,7 +139,7 @@ public class UserController {
 
     @RequestMapping("/my_profile")
     public ModelAndView currentUser(HttpServletRequest request){
-        ModelAndView modelAndView = new ModelAndView("edit.profile/editProfile");
+        ModelAndView modelAndView = new ModelAndView("editProfile");
         Principal principal = request.getUserPrincipal();
         String name = principal.getName();
         User user = userRepo.findUserByName(name);

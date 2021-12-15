@@ -1,6 +1,7 @@
 package com.tracom.office_planner.Meeting;
 
 
+import com.tracom.office_planner.Organization.Organization;
 import com.tracom.office_planner.RepeatMeetings.RepeatMeetings;
 import com.tracom.office_planner.RepeatMeetings.RepeatMeetingsRepo;
 import com.tracom.office_planner.User.User;
@@ -21,13 +22,14 @@ public class MeetingServiceClass {
         this.repeatMeetingsRepo = repeatMeetingsRepo;
     }
 
-    public Page<RepeatMeetings> listAll(String keyword, int pageNo, String sortDir, String field){
+    public Page<RepeatMeetings> listAll(String keyword, int pageNo, String sortDir, String field, Organization organization){
         int pageSize = 5;
         Pageable pageable = PageRequest.of(pageNo-1,pageSize,
                 sortDir.equals("asc")? Sort.by(field).ascending():Sort.by(field).descending());
         if (keyword != null){
-            return repeatMeetingsRepo.search(keyword, pageable);
+            return repeatMeetingsRepo.search(keyword, organization, pageable);
         }
-        return repeatMeetingsRepo.findAll(pageable);
+        return repeatMeetingsRepo.searchAll(pageable,organization);
     }
+
 }

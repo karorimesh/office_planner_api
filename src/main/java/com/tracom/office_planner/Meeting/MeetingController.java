@@ -3,15 +3,15 @@ package com.tracom.office_planner.Meeting;
 import com.azure.cosmos.implementation.guava25.collect.FluentIterable;
 import com.tracom.office_planner.Boardroom.BoardRepository;
 import com.tracom.office_planner.Boardroom.BoardRoom;
-import com.tracom.office_planner.CoOwners.CoOwnerRepo;
-import com.tracom.office_planner.CoOwners.CoOwners;
+import com.tracom.office_planner.Boardroom.BoardServiceClass;
+import com.tracom.office_planner.MeetingsLog.PlannerLogger;
 import com.tracom.office_planner.RepeatMeetings.RepeatMeetings;
 import com.tracom.office_planner.RepeatMeetings.RepeatMeetingsRepo;
 import com.tracom.office_planner.User.User;
 import com.tracom.office_planner.User.UserRepository;
+import com.tracom.office_planner.User.UserServiceClass;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.propertyeditors.CustomDateEditor;
-import org.springframework.cglib.core.CollectionUtils;
 import org.springframework.data.domain.Page;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Controller;
@@ -36,28 +36,28 @@ public class MeetingController {
 
         private RepeatMeetingsRepo meetingsRepo;
 
-        private BoardRepository boardRepository;
-
-        private CoOwnerRepo coOwnerRepo;
+        private BoardServiceClass boardServiceClass;
 
         private MeetingServiceClass serviceClass;
 
+        private UserServiceClass userServiceClass;
+
         private UserRepository userRepository;
 
-    @Autowired
-    public MeetingController(MeetingRepository meetRepo, RepeatMeetingsRepo meetingsRepo, BoardRepository boardRepository, CoOwnerRepo coOwnerRepo, MeetingServiceClass serviceClass, UserRepository userRepository) {
+        private BoardRepository boardRepository;
+
+        @Autowired
+        public MeetingController(MeetingRepository meetRepo, RepeatMeetingsRepo meetingsRepo, BoardServiceClass boardServiceClass, MeetingServiceClass serviceClass, UserServiceClass userServiceClass, UserRepository userRepository, BoardRepository boardRepository) {
         this.meetRepo = meetRepo;
         this.meetingsRepo = meetingsRepo;
-        this.boardRepository = boardRepository;
-        this.coOwnerRepo = coOwnerRepo;
+        this.boardServiceClass = boardServiceClass;
         this.serviceClass = serviceClass;
+        this.userServiceClass = userServiceClass;
         this.userRepository = userRepository;
+        this.boardRepository = boardRepository;
     }
 
-
-
-
-        @GetMapping("/meeting")
+    @GetMapping("/meeting")
         public String viewAllMeetings(HttpServletRequest request, Model model){
             return viewMeetList(request, model, null,1,"meetDate","asc");
         }
@@ -73,13 +73,9 @@ public class MeetingController {
                                     @Param("field") String field, @Param("dir") String dir) {
             Principal principal = request.getUserPrincipal();
             User user = userRepository.findUserByName(principal.getName());
-            Page<RepeatMeetings> content = serviceClass.listAll(keyword,page,dir,field);
+            Page<RepeatMeetings> content = serviceClass.listAll(keyword,page,dir,field, user.getOrganization());
             List<RepeatMeetings> listMeet = content.getContent();
-            List<RepeatMeetings> listMeets = FluentIterable.from(listMeet)
-                            .filter(r -> r.getMeeting()
-                                    .getOrganization() == user.getOrganization())
-                    .toList();
-            model.addAttribute("meetings", listMeets);
+            model.addAttribute("meetings", listMeet);
             model.addAttribute("keyword",keyword);
             model.addAttribute("currentPage", page);
             model.addAttribute("totalPages", content.getTotalPages());
@@ -87,7 +83,7 @@ public class MeetingController {
             model.addAttribute("sortDir", dir);
             model.addAttribute("sortField",field);
             model.addAttribute("reverseDir",dir.equals("asc")?"desc":"asc");
-            return "scheduled/scheduled";
+            return "scheduled";
         }
         @GetMapping("/my_meeting/page/{page}")
         public String viewMyMeetList(HttpServletRequest request,Model model, @Param("keyword") String keyword,
@@ -95,12 +91,11 @@ public class MeetingController {
                                     @Param("field") String field, @Param("dir") String dir) {
             Principal principal = request.getUserPrincipal();
             User user = userRepository.findUserByName(principal.getName());
-            Page<RepeatMeetings> content = serviceClass.listAll(keyword,page,dir,field);
+            Page<RepeatMeetings> content = serviceClass.listAll(keyword,page,dir,field, user.getOrganization());
             List<RepeatMeetings> listMeet = content.getContent();
             List<RepeatMeetings> listMeets = FluentIterable
                     .from(listMeet)
-                            .filter(l -> l.getMeeting().getOrganization() == user.getOrganization()
-                            && l.getMeeting().getUsers().contains(user))
+                            .filter(l -> l.getMeeting().getUsers().contains(user))
                     .toList();
             model.addAttribute("meetings", listMeets);
             model.addAttribute("keyword",keyword);
@@ -110,14 +105,19 @@ public class MeetingController {
             model.addAttribute("sortDir", dir);
             model.addAttribute("sortField",field);
             model.addAttribute("reverseDir",dir.equals("asc")?"desc":"asc");
-            return "scheduled/scheduled";
+            return "scheduled";
         }
 
 
-        @RequestMapping("/delete_meet/{meet_id}")
-        public String deleteMeet(@PathVariable(name = "meet_id") int id) {
-            meetRepo.deleteById(id);
-            return "meeting";
+        @RequestMapping(value = "/delete_meet/{repeatId}")
+        public String deleteMeet(@PathVariable(name = "repeatId") int id, HttpServletRequest request) {
+            Principal principal = request.getUserPrincipal();
+            String name = principal.getName();
+            User user = userRepository.findUserByName(name);
+            Meeting meeting = meetingsRepo.getById(id).getMeeting();
+            PlannerLogger.deleteMeeting(meeting, user);
+            meetingsRepo.deleteById(id);
+            return "redirect:/meeting";
         }
 
     // TODO: 11/17/2021 INIT binder to format the date and time 
@@ -135,19 +135,15 @@ public class MeetingController {
             String name = principal.getName();
             User user = userRepository.findUserByName(name);
             Meeting meeting = new Meeting();
-            List<BoardRoom> board = boardRepository.findAll();
-            List<BoardRoom> boards = FluentIterable.from(board)
-                    .filter(b -> b.getOrganization() == user.getOrganization())
-                    .toList();
-            List<User> usersList = userRepository.findAll();
+            List<BoardRoom> boards = boardRepository.findBoards(user.getOrganization());
+            List<User> usersList = userRepository.findUsers(user.getOrganization());
             List<User> users = FluentIterable.from(usersList)
-                            .filter(u -> u.getOrganization() == user.getOrganization()
-                            && u != user)
+                            .filter(u -> u != user)
                                     .toList();
             model.addAttribute("meet", meeting);
             model.addAttribute("board",boards);
             model.addAttribute("users",users);
-            return "create.meeting/create.meeting";
+            return "createMeeting";
         }
 
 
@@ -161,6 +157,7 @@ public class MeetingController {
             meet.getUsers().add(user);
             meet.getRepeatMeetings().forEach(r->r.setMeeting(meet));
             meetRepo.save(meet);
+            PlannerLogger.createMeeting(meet,user);
             return "redirect:meeting";
         }
 
@@ -172,8 +169,8 @@ public class MeetingController {
             User user = userRepository.findUserByName(name);
             meet.setOrganization(user.getOrganization());
             meet.getRepeatMeetings().forEach(r->r.setMeeting(meet));
-            meet.setBoardroom(meet.getBoardroom());
             meetRepo.save(meet);
+            PlannerLogger.updateMeeting(meet,user);
             return "redirect:meeting";
         }
 
@@ -182,16 +179,9 @@ public class MeetingController {
             Principal principal = request.getUserPrincipal();
             String name = principal.getName();
             User user = userRepository.findUserByName(name);
-            List<BoardRoom> board = boardRepository.findAll();
-            List<User> userList = userRepository.findAll();
-            List<BoardRoom> boards = FluentIterable.from(board)
-                            .filter(b -> b.getOrganization() == user.getOrganization())
-                                    .toList();
-            List<User> users = FluentIterable.from(userList)
-                            .filter(u -> u.getOrganization() == user.getOrganization()
-                            && u != user)
-                                    .toList();
-            ModelAndView mnv = new ModelAndView("edit.meeting/editMeeting");
+            List<BoardRoom> boards = boardRepository.findBoards(user.getOrganization());
+            List<User> users = userRepository.findUsers(user.getOrganization());
+            ModelAndView mnv = new ModelAndView("editMeeting");
             Meeting m = (Meeting) meetRepo.getById(id);
             model.addAttribute("board",boards);
             model.addAttribute("users",users);

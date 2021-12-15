@@ -1,5 +1,6 @@
 package com.tracom.office_planner.Organization;
 
+import com.tracom.office_planner.MeetingsLog.PlannerLogger;
 import com.tracom.office_planner.User.User;
 import com.tracom.office_planner.User.UserRepository;
 import com.tracom.office_planner.User.UserServiceClass;
@@ -7,6 +8,9 @@ import com.tracom.office_planner.User.Utility;
 import net.bytebuddy.utility.RandomString;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.security.authentication.AnonymousAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -14,6 +18,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 
 import javax.mail.MessagingException;
 import javax.servlet.http.HttpServletRequest;
+import java.io.UnsupportedEncodingException;
 
 @Controller
 public class OrganizationController {
@@ -37,7 +42,11 @@ public class OrganizationController {
         User user = new User();
         model.addAttribute("org",org);
         model.addAttribute("user", user);
-        return "create.organization/create.organization";
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if(authentication == null || authentication instanceof AnonymousAuthenticationToken){
+            return "createOrganization";
+        }
+        return "redirect:/home";
     }
 
     @PostMapping("/save_org")
@@ -53,13 +62,17 @@ public class OrganizationController {
             organizationRepo.save(organization);
             userRepo.save(us);
             userService.sendRegisterMail(us,resetlink);
+            PlannerLogger.createOrganization(organization);
+            PlannerLogger.createUser(us);
             model.addAttribute("message", "Organization Added Successfully, Check Email to register Admin");
             throw new MessagingException("Details not valid or already exist");
         }  catch ( MessagingException e){
             model.addAttribute("error",e.getMessage());
         }catch (DataIntegrityViolationException e) {
             model.addAttribute("error", "Email already exists");
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
         }
-        return "redirect:/landing";
+        return "redirect:/";
     }
 }

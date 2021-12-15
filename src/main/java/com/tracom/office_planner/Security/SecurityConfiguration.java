@@ -1,6 +1,10 @@
 package com.tracom.office_planner.Security;
 
+import com.tracom.office_planner.MeetingsLog.PlannerLogger;
 import com.tracom.office_planner.User.CustomUserService;
+import com.tracom.office_planner.User.User;
+import com.tracom.office_planner.User.UserRepository;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
@@ -9,12 +13,29 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.web.authentication.logout.LogoutSuccessHandler;
+
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
+import java.security.Principal;
 
 @Configuration
 @EnableWebSecurity
 public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
+
+    @Autowired
+    private LoginFailure loginFailure;
+    @Autowired
+    private LoginSuccess loginSuccess;
+    @Autowired
+    private UserRepository userRepo;
+
+
 
     @Bean
     public UserDetailsService userDetailsService(){
@@ -51,7 +72,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
                         "/reschedule/**")
                 .hasAuthority("admin")
                 .antMatchers("/list_users","/new_meet",
-                        "/meeting","/home",
+                        "/meeting/**","/home",
                         "/boardroom","/my_meeting",
                         "/boardroom/page/**","meeting/page/**",
                         "/my_meeting/page/**","/list_users/page/**",
@@ -63,10 +84,18 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
                 .formLogin()
                 .loginPage("/login")
                 .usernameParameter("username")
+                .failureHandler(loginFailure)
+                .successHandler(loginSuccess)
                 .defaultSuccessUrl("/home")
                 .permitAll()
                 .and()
                 .logout()
+//                .logoutSuccessHandler((request, response, authentication) -> {
+//                    Principal principal = request.getUserPrincipal();
+//                    String name = principal.getName();
+//                    User user = userRepo.findUserByName(name);
+//                    PlannerLogger.loggedOutUser(user);
+//                })
                 .logoutSuccessUrl("/landing")
                 .permitAll()
                 .and()

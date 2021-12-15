@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="https://www.thymeleaf.org/thymeleaf-extras-springsecurity5">
+<head id="Head">
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="">
+    <meta name="author" content="Mark Otto, Jacob Thornton, and Bootstrap contributors">
+    <meta name="generator" content="Jekyll v3.8.5">
+    <title>Welcome | Planner</title>
+
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.6.3/css/all.css" integrity="sha384-UHRtZLI+pbxtHCWp1t77Bi1L4ZtiqrqD80Kn4Z8NTSRyMA2Fd33n5dQ8lWUE00s/" crossorigin="anonymous"></head>
+
+
+<link th:href="@{/homepage.css}" rel="stylesheet" media="all" type="text/css">
+</head>
+<body id="landing">
+<header id="landingHead">
+<h1>Welcome to Tracom's resource planner</h1>
+<p>Tracom's resource planner helps schedule for organizations' resources i.e. Boardrooms.
+Continue to set-up a planner for a legible organization as the admin or Login if your organization is already setup.
+If not registered contact your organization office admin to add you as a user</p>
+<div style="display: flex">
+    <div style="margin-left: 10px"><a th:href="@{/new_org}" class="SignIn"> Create Organization </a></div>
+    <div style="margin-left: 10px"><a th:href="@{/login}" class="SignIn"> Login </a></div>
+
+</div>
+</header>
+<div id="Footers" style="margin-top: 0 !important;">
+    <footer style="margin-top: 0 !important;" id="footer" class=" Footer row">
+        <div class="col-md-6">
+            <p>Mesh  &copy; 2021</p>
+            <p>Contact:</p>
+            <p><span class="fas fa-envelope-open"></span> email: info@tracom.co.ke</p>
+            <p><span class="fas fa-phone"></span> phone:+5689000775</p>
+            <!--Social Media Icons-->
+        </div>
+        <div class="col-md-6">
+            <p>Terms and Conditions <span class="fas fa-link"></span></p>
+            <p>Licence and agreement <span class="fas fa-link"></span></p>
+        </div>
+    </footer>
+</div>
+</body>
+</html>

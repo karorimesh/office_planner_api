@@ -1,6 +1,5 @@
 package com.tracom.office_planner;
 
-import com.tracom.office_planner.CoOwners.CoOwnerConverter;
 import com.tracom.office_planner.Meeting.MeetingConverter;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.format.FormatterRegistry;
@@ -13,7 +12,6 @@ public class ProjectConfigurer implements WebMvcConfigurer {
     @Override
     public void addFormatters(FormatterRegistry registry) {
         registry.addConverter(new MeetingConverter());
-        registry.addConverter(new CoOwnerConverter());
         DateTimeFormatterRegistrar registrar = new DateTimeFormatterRegistrar();
         registrar.setUseIsoFormat(true);
         registrar.registerFormatters(registry);

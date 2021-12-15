@@ -6,6 +6,8 @@ import com.tracom.office_planner.Organization.Organization;
 import lombok.*;
 
 import javax.persistence.*;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -41,8 +43,26 @@ public class User {
     @JoinColumn(name = "organization_id")
     private Organization organization;
 
-    @ManyToMany(mappedBy = "users")
+    @ManyToMany(mappedBy = "users", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<Meeting> meetings = new ArrayList<Meeting>();
+
+    @Column(name = "account_unlocked", columnDefinition = "boolean default true")
+    private boolean accountUnlocked = true;
+
+    @Column(name = "attempts")
+    private Integer failedAttempt = 0;
+
+    @Column(name = "lock_time")
+    private LocalDateTime lockTime;
+
+    @Column(name = "enabled", nullable = false, columnDefinition = "boolean default true")
+    private boolean enabled = true;
+
+    @OneToMany
+    List<UserPassword> userPasswords = new ArrayList<>();
+
+    @Column(name = "phone", length = 15)
+    private String phone;
 
     public User(int userId) {
         this.userId = userId;

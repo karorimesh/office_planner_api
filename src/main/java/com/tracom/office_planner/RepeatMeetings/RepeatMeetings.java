@@ -23,7 +23,7 @@ public class RepeatMeetings {
         @GeneratedValue(strategy = GenerationType.IDENTITY)
         private int repeatId;
         private LocalDate meetDate;
-        @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+        @ManyToOne(cascade = CascadeType.PERSIST, fetch = FetchType.LAZY)
         @JoinColumn(name = "meet_id")
         private Meeting meeting;
 

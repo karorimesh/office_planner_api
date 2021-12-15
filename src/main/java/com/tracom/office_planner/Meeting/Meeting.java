@@ -1,7 +1,6 @@
 package com.tracom.office_planner.Meeting;
 
 import com.tracom.office_planner.Boardroom.BoardRoom;
-import com.tracom.office_planner.CoOwners.CoOwners;
 import com.tracom.office_planner.Organization.Organization;
 import com.tracom.office_planner.RepeatMeetings.RepeatMeetings;
 import com.tracom.office_planner.User.User;
@@ -35,18 +34,16 @@ public class Meeting {
     private String meetName;
     private String description;
     private int capacity;
-    @ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @ManyToMany(fetch = FetchType.LAZY, cascade = {CascadeType.PERSIST})
     @JoinTable(
             name = "user_meetings",
             joinColumns = @JoinColumn(name = "meet_id"),
             inverseJoinColumns = @JoinColumn(name = "user_id")
     )
     private List<User> users = new ArrayList<User>();
-    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @ManyToOne(fetch = FetchType.EAGER, cascade = {CascadeType.PERSIST})
     @JoinColumn(name = "room")
     private BoardRoom boardroom;
-    @OneToMany(cascade = CascadeType.PERSIST, orphanRemoval = true)
-    private List<CoOwners> coOwners;
     @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY, mappedBy = "meeting")
 //    @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
     private List<RepeatMeetings> repeatMeetings = new ArrayList<>();
@@ -54,7 +51,7 @@ public class Meeting {
     private LocalTime meetStart;
 //    @DateTimeFormat(iso = DateTimeFormat.ISO.TIME)
     private LocalTime meetEnd;
-    @ManyToOne
+    @ManyToOne(cascade = CascadeType.PERSIST)
     @JoinColumn(name = "organization")
     private Organization organization;
 
@@ -71,7 +68,6 @@ public class Meeting {
                 ", capacity=" + capacity +
                 ", users=" + users +
                 ", boardroom=" + boardroom +
-                ", coOwners=" + coOwners +
                 ", repeatMeetings=" + repeatMeetings +
                 ", meetStart=" + meetStart +
                 ", meetEnd=" + meetEnd +

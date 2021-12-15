@@ -2,7 +2,6 @@ package com.tracom.office_planner.Meeting;
 
 import com.tracom.office_planner.RepeatMeetings.RepeatMeetings;
 import org.springframework.core.convert.converter.Converter;
-import org.springframework.stereotype.Component;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;

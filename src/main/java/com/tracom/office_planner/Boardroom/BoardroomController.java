@@ -1,13 +1,9 @@
 package com.tracom.office_planner.Boardroom;
 
 import com.azure.cosmos.implementation.guava25.collect.FluentIterable;
-import com.tracom.office_planner.Meeting.Meeting;
-import com.tracom.office_planner.Meeting.MeetingRepository;
-import com.tracom.office_planner.RepeatMeetings.RepeatMeetings;
-import com.tracom.office_planner.RepeatMeetings.RepeatMeetingsRepo;
+import com.tracom.office_planner.MeetingsLog.PlannerLogger;
 import com.tracom.office_planner.User.User;
 import com.tracom.office_planner.User.UserRepository;
-import org.apache.commons.collections.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.repository.query.Param;
@@ -22,7 +18,6 @@ import org.springframework.web.servlet.ModelAndView;
 import javax.servlet.http.HttpServletRequest;
 import java.security.Principal;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Controller
 public class BoardroomController {
@@ -54,13 +49,10 @@ public class BoardroomController {
             Principal principal = request.getUserPrincipal();
             String name = principal.getName();
             User user = userRepository.findUserByName(name);
-            Page<BoardRoom> content = serviceClass.listAll(keyword,page,dir,field);
+            Page<BoardRoom> content = serviceClass.listAll(keyword,page,dir,field, user.getOrganization());
             List<BoardRoom> listBoards = content.getContent();
-            List<BoardRoom> listBoard = FluentIterable.from(listBoards)
-                    .filter(b -> b.getOrganization() == user.getOrganization())
-                            .toList();
             // TODO: 11/16/2021 Filter Boards o the user, also add ant matchers to spring security
-            model.addAttribute("board", listBoard);
+            model.addAttribute("board", listBoards);
             model.addAttribute("keyword",keyword);
             model.addAttribute("currentPage", page);
             model.addAttribute("totalPages", content.getTotalPages());
@@ -68,10 +60,15 @@ public class BoardroomController {
             model.addAttribute("sortDir", dir);
             model.addAttribute("sortField",field);
             model.addAttribute("reverseDir",dir.equals("asc")?"desc":"asc");
-            return "boardrooms/boardrooms";
+            return "boardrooms";
         }
         @RequestMapping("/delete_board/{board_id}")
-        public String deleteBoard(@PathVariable(name = "board_id") int id) {
+        public String deleteBoard(@PathVariable(name = "board_id") int id, HttpServletRequest request) {
+            Principal principal = request.getUserPrincipal();
+            String name = principal.getName();
+            User user = userRepository.findUserByName(name);
+            BoardRoom boardRoom = boardRepository.getById(id);
+            PlannerLogger.deleteBoardroom(boardRoom,user);
             boardRepository.deleteById(id);
             return "/boardroom";
         }
@@ -81,7 +78,7 @@ public class BoardroomController {
 
             BoardRoom boardRoom = new BoardRoom();
             model.addAttribute("board", boardRoom);
-            return "boardroom/boardroom";
+            return "boardroom";
         }
 
         @PostMapping("/save_board")
@@ -91,12 +88,26 @@ public class BoardroomController {
             User user = userRepository.findUserByName(name);
             boardRoom.setOrganization(user.getOrganization());
             boardRepository.save(boardRoom);
+            PlannerLogger.createBoardroom(boardRoom,user);
             return "redirect:/boardroom";
+
+        }
+
+        @PostMapping("/edited_board")
+        public String saveEditedBoard(BoardRoom boardRoom, HttpServletRequest request) {
+            Principal principal = request.getUserPrincipal();
+            String name = principal.getName();
+            User user = userRepository.findUserByName(name);
+            boardRoom.setOrganization(user.getOrganization());
+            boardRepository.save(boardRoom);
+            PlannerLogger.editBoardroom(boardRoom,user);
+            return "redirect:/boardroom";
+
         }
 
         @RequestMapping("/edit/{board_id}")
         public ModelAndView showEditBoardForm(@PathVariable(name = "board_id") Integer id) {
-            ModelAndView mnv = new ModelAndView("edit.boardroom/editBoardroom");
+            ModelAndView mnv = new ModelAndView("editBoardroom");
             BoardRoom boardRoom = (BoardRoom) boardRepository.getById(id);
             mnv.addObject("board", boardRoom);
             return mnv;

@@ -29,7 +29,7 @@ public class BoardRoom {
     private String Others;
     @ManyToOne
     private Organization organization;
-    @OneToMany(mappedBy = "boardroom")
+    @OneToMany(mappedBy = "boardroom", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     private List<Meeting> meetings = new ArrayList<>();
 
     public BoardRoom(int board_id, String board_name) {

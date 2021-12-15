@@ -1,0 +1,114 @@
+package com.tracom.office_planner.Notifcations;
+
+import com.tracom.office_planner.Meeting.Meeting;
+import com.tracom.office_planner.RepeatMeetings.RepeatMeetings;
+import com.tracom.office_planner.RepeatMeetings.RepeatMeetingsRepo;
+import com.tracom.office_planner.User.User;
+import com.tracom.office_planner.User.UserRepository;
+import com.tracom.office_planner.User.UserServiceClass;
+import lombok.NoArgsConstructor;
+import lombok.SneakyThrows;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.scheduling.annotation.EnableScheduling;
+import org.springframework.scheduling.annotation.Scheduled;
+import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
+
+import javax.mail.MessagingException;
+import javax.transaction.Transactional;
+import java.io.UnsupportedEncodingException;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.util.Date;
+import java.util.List;
+import java.util.Timer;
+import java.util.TimerTask;
+import java.util.concurrent.*;
+
+@EnableScheduling
+@Component
+@NoArgsConstructor
+@Transactional
+@Service
+public class NotificationsUtil {
+
+
+    @Autowired
+    private UserRepository userRepository;
+    @Autowired
+    private RepeatMeetingsRepo meetingsRepo;
+    @Autowired
+    private UserServiceClass serviceClass;
+    @Autowired
+    private static NotificationsTimer notificationsTimer;
+
+
+    public NotificationsUtil(UserRepository userRepository, RepeatMeetingsRepo meetingsRepo) {
+        this.userRepository = userRepository;
+        this.meetingsRepo = meetingsRepo;
+    }
+
+    TimerTask notifications = new TimerTask() {
+        @SneakyThrows
+        @Override
+        public void run() {
+            System.out.println("Sending notifications to user");
+//        userServiceClass.sendMeetingMail(user,meet);
+        }
+    };
+
+    public void notificationTimer(/* User user, RepeatMeetings meeting*/) throws ExecutionException, InterruptedException {
+        ScheduledExecutorService scheduledExecutorService = Executors.newScheduledThreadPool(5);
+//        LocalDateTime time = LocalDateTime.of(meeting.getMeetDate(),
+//                meeting.getMeeting().getMeetStart()).minusMinutes(15);
+//        Date date = Date.from(time.atZone(ZoneId.systemDefault()).toInstant());
+        ScheduledFuture scheduledFuture = scheduledExecutorService.schedule(notifications,5, TimeUnit.SECONDS);
+        scheduledFuture.get();
+    }
+
+    @Scheduled(fixedRate = 15 * 60 * 1000)
+        public void sendNotifications(){
+        List<RepeatMeetings> repeatMeetings = meetingsRepo.findAll();
+        repeatMeetings.forEach(r ->{
+            System.out.println(r.getMeeting().getMeetName());
+            try {
+                notificationTimer();
+            } catch (ExecutionException e) {
+                e.printStackTrace();
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+//            r.getMeeting().getUsers().forEach(u ->{
+//                if (r.getMeetDate().isAfter(LocalDate.now()) || r.getMeetDate().isEqual(LocalDate.now())){
+//                    notificationTimer(u,r);
+//                }
+//            });
+//            r.getMeeting().getUsers().forEach(u -> {
+//                try {
+//                    serviceClass.sendMeetingMail(u, r.getMeeting());
+//                } catch (MessagingException e) {
+//                    e.printStackTrace();
+//                } catch (UnsupportedEncodingException e) {
+//                    e.printStackTrace();
+//                }
+//            });
+        });
+    }
+
+
+//    public void sendNotifications(){
+//        Timer timer = new Timer();
+//        timer.purge();
+//        List<User> users = userRepository.findAll();
+//        List<RepeatMeetings> repeatMeetings = meetingsRepo.findAll();
+//        // TODO: 11/25/2021 Filter to current Date
+//        repeatMeetings.forEach(r ->{
+//            r.getMeeting().getUsers().forEach(u ->{
+//                if (r.getMeetDate().isAfter(LocalDate.now()) || r.getMeetDate().isEqual(LocalDate.now())){
+//                    notificationTimer(u,r);
+//                }
+//            });
+//        });
+//    }
+}

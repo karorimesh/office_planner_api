@@ -1,6 +1,7 @@
 package com.tracom.office_planner.Boardroom;
 
 
+import com.tracom.office_planner.Organization.Organization;
 import com.tracom.office_planner.User.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -19,13 +20,13 @@ public class BoardServiceClass {
         this.boardRepository = boardRepository;
     }
 
-    public Page<BoardRoom> listAll(String keyword, int pageNo, String sortDir, String field){
+    public Page<BoardRoom> listAll(String keyword, int pageNo, String sortDir, String field, Organization organization){
         int pageSize = 5;
         Pageable pageable = PageRequest.of(pageNo-1,pageSize,
                 sortDir.equals("asc")? Sort.by(field).ascending():Sort.by(field).descending());
         if (keyword != null){
-            return boardRepository.search(keyword, pageable);
+            return boardRepository.search(keyword, organization, pageable );
         }
-        return boardRepository.findAll(pageable);
+        return boardRepository.searchAll(organization,pageable);
     }
 }

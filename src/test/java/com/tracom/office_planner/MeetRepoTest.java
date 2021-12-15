@@ -16,7 +16,7 @@ import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
 
-@DataJpaTest
+//@DataJpaTest
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
 @Rollback(value = false)
 public class MeetRepoTest {
@@ -26,7 +26,7 @@ public class MeetRepoTest {
     @Autowired
     private RepeatMeetingsRepo repo;
 
-    @Test
+//    @Test
     public void testMeetCreate() {
 
 //        List<LocalDate> date = new ArrayList<LocalDate>();
