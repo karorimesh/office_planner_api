@@ -1,5 +1,7 @@
 package com.tracom.office_planner;
 
+/*Configurer class for formatters e.g. date and converters in the whole application */
+
 import com.tracom.office_planner.Meeting.MeetingConverter;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.format.FormatterRegistry;

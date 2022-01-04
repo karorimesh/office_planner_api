@@ -1,5 +1,10 @@
 package com.tracom.office_planner.User;
 
+/*
+Entity to save a users passwords so hat they don't reset the password
+ with previously used passwords
+ */
+
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;

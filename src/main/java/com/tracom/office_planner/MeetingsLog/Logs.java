@@ -1,7 +1,9 @@
 package com.tracom.office_planner.MeetingsLog;
 
-import lombok.*;
+/*Entity to put logs in a database,
+ not yet implemented didn't think it was the best approach*/
 
+import lombok.*;
 import javax.persistence.*;
 import java.time.LocalDateTime;
 

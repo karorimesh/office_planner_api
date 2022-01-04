@@ -11,11 +11,11 @@ import org.springframework.boot.test.context.SpringBootTest;
 import java.util.ArrayList;
 import java.util.List;
 
-//@SpringBootTest
+@SpringBootTest
 public class SmsTest {
     @Autowired
     UserServiceClass userServiceClass;
-//    @Test
+    @Test
     public void sendSms(){
         User user = new User();
         Meeting meeting = new Meeting();

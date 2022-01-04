@@ -1,11 +1,15 @@
 package com.tracom.office_planner.Notifcations;
 
+/* This is a notification utility class to allow scheduling
+ of meeting notifications to be sent to users
+ 15 minutes before the meeting time- a really nice piece of work
+ */
+
 import com.tracom.office_planner.Meeting.Meeting;
 import com.tracom.office_planner.MeetingsLog.PlannerLogger;
 import com.tracom.office_planner.RepeatMeetings.RepeatMeetings;
 import com.tracom.office_planner.RepeatMeetings.RepeatMeetingsRepo;
 import com.tracom.office_planner.User.User;
-import com.tracom.office_planner.User.UserRepository;
 import com.tracom.office_planner.User.UserServiceClass;
 import lombok.NoArgsConstructor;
 import lombok.SneakyThrows;
@@ -14,15 +18,14 @@ import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
-
-import javax.mail.MessagingException;
 import javax.transaction.Transactional;
-import java.io.UnsupportedEncodingException;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.ZoneId;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.TimerTask;
 import java.util.concurrent.*;
 
 @EnableScheduling
@@ -36,25 +39,19 @@ public class NotificationsUtil {
     private RepeatMeetingsRepo meetingsRepo;
     @Autowired
     private UserServiceClass serviceClass;
+    /*Create a pool of 100 threads to be able to run simultaneously,
+     possibility of being higher depending on the expected traffic
+     */
+    private final ScheduledExecutorService scheduledExecutorService = Executors.newScheduledThreadPool(100);
+    /*
+    Store a list of the tasks already scheduled task to allow actions such as cancelling
+     */
+    private final List<ScheduledFuture<?>> scheduledFutures = new ArrayList<>();
 
-    private ScheduledExecutorService scheduledExecutorService = Executors.newScheduledThreadPool(10);
-    private List<ScheduledFuture<?>> scheduledFutures = new ArrayList<>();
-    private User user;
-    private Meeting meet;
 
-
-
-    TimerTask notifications = new TimerTask() {
-
-        @SneakyThrows
-        @Override
-        public void run() {
-            serviceClass.sendMeetingMail(user,meet);
-            serviceClass.sendMeetingSms(user,meet);
-            PlannerLogger.meetingNotification(meet,user);
-        }
-    };
-
+    /*
+    This method configures a timer to enable the scheduling 15 minutes before time
+     */
     public void notificationTimer(RepeatMeetings meeting, User user) throws ExecutionException, InterruptedException {
         LocalDateTime time = LocalDateTime.of(meeting.getMeetDate(),
                 meeting.getMeeting().getMeetStart()).minusMinutes(15);
@@ -65,6 +62,11 @@ public class NotificationsUtil {
         scheduledFutures.add(scheduledFuture);
     }
 
+    /*
+    This method retrieves all the meetings in the database at an interval
+    The meetings are of a specified date
+    17 minutes to compensate for lag time since it is in long tye and the action cannot be instant
+     */
     @Scheduled(fixedDelay = 17 * 60 * 1000)
         public void sendNotifications(){
         try {
@@ -78,8 +80,6 @@ public class NotificationsUtil {
             if (r.getMeeting().getMeetStart().isAfter(LocalTime.now().plusMinutes(16))) {
                 r.getMeeting().getUsers().forEach(u -> {
                     try {
-                        user = u;
-                        meet = r.getMeeting();
                         notificationTimer(r,u);
                     } catch (ExecutionException e) {
                         e.printStackTrace();
@@ -90,6 +90,10 @@ public class NotificationsUtil {
             }
         });
     }
+
+    /*
+    An internal class that creates the task to be run
+     */
 
     public class Notification extends TimerTask {
         User user;

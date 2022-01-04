@@ -1,4 +1,7 @@
 package com.tracom.office_planner;
+/*
+Overall project controller
+ */
 
 import com.tracom.office_planner.User.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -39,7 +42,7 @@ public class ProjectController {
     }
 
 
-    @GetMapping("/login")
+//    @GetMapping("/login")
     public String validateUser(){
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         if(authentication == null || authentication instanceof AnonymousAuthenticationToken){

@@ -1,5 +1,9 @@
 package com.tracom.office_planner.User;
 
+/*
+Handle crud functions for the user
+ */
+
 import com.tracom.office_planner.Organization.Organization;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -10,19 +14,26 @@ import org.springframework.data.jpa.repository.Query;
 import java.util.List;
 
 public interface UserRepository extends JpaRepository<User, Integer> {
+//    Find user by their username
     @Query("FROM User u WHERE u.userName = ?1")
     User findUserByName(String user_name);
+//    Find user by their user emails
     @Query("FROM User u WHERE u.userEmail = ?1")
     User findByEmail(String user_email);
+//    Find user by their access tokens
     @Query("FROM User u WHERE u.token = ?1")
-    public User findByToken(String token);
+    User findByToken(String token);
+//    Find users by a search keyword
     @Query("SELECT u FROM User u WHERE CONCAT(u.userName, ' ' ,u.userId,' ',u.userEmail,' ',u.userRole) LIKE %?1% AND u.organization=?2")
-    public Page<User> search(String keyword, Organization organization, Pageable pageable);
+    Page<User> search(String keyword, Organization organization, Pageable pageable);
+//    find all users based on their organization
     @Query("SELECT u FROM User u WHERE u.organization =?1")
-    public Page<User> searchAll( Organization organization,Pageable pageable);
+    Page<User> searchAll(Organization organization, Pageable pageable);
+//    update failed login attempts by the user
     @Query("UPDATE User u SET u.failedAttempt = ?1 WHERE u.userEmail = ?2")
     @Modifying
-    public void updateFailedAttempt(int failed, String email);
+    void updateFailedAttempt(int failed, String email);
+//    find users by their organization
     @Query("SELECT u FROM User u WHERE u.organization=?1")
     List<User> findUsers(Organization organization);
 }

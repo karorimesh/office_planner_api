@@ -1,8 +1,12 @@
 package com.tracom.office_planner.Employee;
 
+/* Entity for employee - an incomplete concept
+ to enable an organization with an
+already existing database for employees
+ */
+
 import com.tracom.office_planner.Organization.Organization;
 import lombok.*;
-
 import javax.persistence.*;
 
 @Entity

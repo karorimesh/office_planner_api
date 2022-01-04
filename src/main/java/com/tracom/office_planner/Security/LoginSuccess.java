@@ -1,5 +1,8 @@
 package com.tracom.office_planner.Security;
 
+/* Handler for successful login
+ */
+
 import com.tracom.office_planner.MeetingsLog.PlannerLogger;
 import com.tracom.office_planner.User.CustomUser;
 import com.tracom.office_planner.User.User;
@@ -20,8 +23,6 @@ import java.io.IOException;
 public class LoginSuccess extends SimpleUrlAuthenticationSuccessHandler {
     @Autowired
     private UserServiceClass serviceClass;
-    @Autowired
-    private UserRepository userRepository;
 
     @Override
     public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication) throws IOException, ServletException {

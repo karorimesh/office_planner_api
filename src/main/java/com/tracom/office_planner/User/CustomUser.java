@@ -1,5 +1,9 @@
 package com.tracom.office_planner.User;
 
+/*
+User details service to enable authentication
+ */
+
 import lombok.*;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;

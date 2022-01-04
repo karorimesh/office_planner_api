@@ -15,7 +15,7 @@ import org.springframework.stereotype.Service;
 @Service
 public class MeetingServiceClass {
 
-    private RepeatMeetingsRepo repeatMeetingsRepo;
+    private final RepeatMeetingsRepo repeatMeetingsRepo;
 
     @Autowired
     public MeetingServiceClass(RepeatMeetingsRepo repeatMeetingsRepo) {

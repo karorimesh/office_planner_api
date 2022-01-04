@@ -1,5 +1,9 @@
 package com.tracom.office_planner.User;
 
+/*
+Login for user management and notifications
+ */
+
 import com.tracom.office_planner.Meeting.Meeting;
 import com.tracom.office_planner.MeetingsLog.PlannerLogger;
 import com.tracom.office_planner.Notifcations.SendNotification;
@@ -20,6 +24,7 @@ import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.ui.Model;
 
 import javax.mail.MessagingException;
 import javax.mail.internet.MimeMessage;
@@ -36,15 +41,16 @@ import java.util.List;
 public class UserServiceClass implements SendNotification {
     public static final int MAX_ATTEMPTS = 4;
 
+//    Time account is locked after failed attempts
     private static final long LOCK_TIME = 30 * 60 * 1000;
 
     private final JavaMailSender mailSender;
 
-    private SmsConfiguration smsConfiguration;
+    private final SmsConfiguration smsConfiguration;
 
-    private UserRepository userRepository;
+    private final UserRepository userRepository;
 
-    private UserPasswordRepository passwordRepository;
+    private final UserPasswordRepository passwordRepository;
 
     @Autowired
     public UserServiceClass(JavaMailSender mailSender, SmsConfiguration smsConfiguration, UserRepository userRepository, UserPasswordRepository passwordRepository) {
@@ -54,8 +60,7 @@ public class UserServiceClass implements SendNotification {
         this.passwordRepository = passwordRepository;
     }
 
-
-
+//    Send notification to user with a link to enable them to set up their new account
     @Override
     public void sendRegisterMail(User user, String reset) throws MessagingException, UnsupportedEncodingException {
         MimeMessage registerMessage = mailSender.createMimeMessage();
@@ -71,9 +76,11 @@ public class UserServiceClass implements SendNotification {
                 +"<p>Regards</p>";
         helper.setSubject(subject);
         helper.setText(content,true);
+        userRepository.save(user);
         mailSender.send(registerMessage);
     }
 
+//    Email notification for user to enable them to reser their password
     @Override
     public void sendForgotMail(User user, String reset) {
         SimpleMailMessage message = new SimpleMailMessage();
@@ -83,6 +90,7 @@ public class UserServiceClass implements SendNotification {
         mailSender.send(message);
     }
 
+//    Send a meeting notification to user about a meeting about to start
     @Override
     public void sendMeetingMail(User user, Meeting meeting) throws MessagingException, UnsupportedEncodingException {
         MimeMessage meetMessage = mailSender.createMimeMessage();
@@ -105,6 +113,7 @@ public class UserServiceClass implements SendNotification {
 
     }
 
+//    Send a sms notification to a user on a meeting about to start
     @Override
     public void sendMeetingSms(User user, Meeting meeting) {
         List<String> users = new ArrayList<>();
@@ -119,6 +128,7 @@ public class UserServiceClass implements SendNotification {
         creator.create();
     }
 
+//    User requesting a reset link or a register link
     public void updateToken(String token, String email) throws UsernameNotFoundException{
         User user = userRepository.findByEmail(email);
         if(user != null){
@@ -130,10 +140,12 @@ public class UserServiceClass implements SendNotification {
         }
     }
 
+//    Retrieving a user based on their token
     public User getUserByToken(String token){
         return userRepository.findByToken(token);
     }
 
+//    Update a users password after reset
     public void updatePassword(User user, String password){
         BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
         String encoded = encoder.encode(password);
@@ -142,6 +154,7 @@ public class UserServiceClass implements SendNotification {
         userRepository.save(user);
     }
 
+//    Function to update a user
     public void updateUser(User user, String username, String password, String phone) {
         BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
         String encoded = encoder.encode(password);
@@ -157,6 +170,8 @@ public class UserServiceClass implements SendNotification {
         passwordRepository.save(userPassword);
     }
 
+//    Find all users bases on a search keyword
+
     public Page<User> listAll(String keyword, int pageNo, String sortDir, String field, Organization organization){
         int pageSize = 5;
         Pageable pageable = PageRequest.of(pageNo-1,pageSize,
@@ -168,16 +183,6 @@ public class UserServiceClass implements SendNotification {
     }
 
 
-//    Meeting scheduler notifications Testing purpose
-//    @Scheduled(fixedDelay = 10000)
-//    public void FetchUsers(){
-//        List<User> users = userRepository.findAll();
-//        users.forEach(user -> {
-//            // TODO: 11/25/2021 Timer Function
-//        });
-//    }
-
-
 //    Failed Attempts Service
     public void increaseAttempts(User user){
         int currentAttempts = user.getFailedAttempt() + 1;
@@ -185,16 +190,21 @@ public class UserServiceClass implements SendNotification {
         PlannerLogger.loginFailure(user);
     }
 
+//    change the number of failed attempts after a user successfully logs in
+
     public void resetAttempts(String email){
         userRepository.updateFailedAttempt(0,email);
     }
 
+//    Lock users account after maxing out their login attempts
     public void lockAccount(User user){
         user.setAccountUnlocked(false);
         user.setLockTime(LocalDateTime.now());
         userRepository.save(user);
         PlannerLogger.loginFailureLocked(user);
     }
+
+//    Unlock account after lock time is elapsed
 
     public boolean unlockAccount(User user){
         long lockedTime = user.getLockTime().atZone(ZoneId.systemDefault()).toInstant().toEpochMilli();

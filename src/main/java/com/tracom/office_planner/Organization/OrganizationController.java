@@ -1,5 +1,7 @@
 package com.tracom.office_planner.Organization;
 
+
+
 import com.tracom.office_planner.MeetingsLog.PlannerLogger;
 import com.tracom.office_planner.User.User;
 import com.tracom.office_planner.User.UserRepository;
@@ -23,11 +25,11 @@ import java.io.UnsupportedEncodingException;
 @Controller
 public class OrganizationController {
 
-    private OrganizationRepo organizationRepo;
+    private final OrganizationRepo organizationRepo;
 
-    private UserRepository userRepo;
+    private final UserRepository userRepo;
 
-    private UserServiceClass userService;
+    private final UserServiceClass userService;
 
     @Autowired
     public OrganizationController(OrganizationRepo organizationRepo, UserRepository userRepo, UserServiceClass userService) {
@@ -42,6 +44,7 @@ public class OrganizationController {
         User user = new User();
         model.addAttribute("org",org);
         model.addAttribute("user", user);
+//        Only a logged out user can create an ganization
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         if(authentication == null || authentication instanceof AnonymousAuthenticationToken){
             return "createOrganization";

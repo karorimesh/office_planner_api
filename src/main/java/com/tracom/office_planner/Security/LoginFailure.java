@@ -1,5 +1,8 @@
 package com.tracom.office_planner.Security;
 
+/*
+Handler for failed login
+ */
 
 import com.tracom.office_planner.User.User;
 import com.tracom.office_planner.User.UserRepository;

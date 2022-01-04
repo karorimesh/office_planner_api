@@ -1,4 +1,4 @@
-//Organization Entity
+//Organization Entity to allow addition of more than one organization
 package com.tracom.office_planner.Organization;
 
 import lombok.*;

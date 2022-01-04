@@ -144,6 +144,14 @@
                                 <h5 style="color: bisque" >Create Meeting</h5>
                             </div>
                             <div class="card-body row">
+                                <div class="error-div col-md-12">
+                                    <div th:if="${error != null}">
+                                        <p class="text-danger">[[${error}]]</p>
+                                    </div>
+                                    <div th:if="${message != null}">
+                                        <p class="text-warning">[[${message}]]</p>
+                                    </div>
+                                </div>
                                 <div class="col-md-6 ">
                                     <div >
                                         <input th:field="*{meetName}" class="form-control" placeholder="Meeting Topic" required />
@@ -153,7 +161,7 @@
                                     </div><br/>
                                     <div >
                                         <label class="col-form-label col-md-4"  >Capacity:</label>
-                                        <input th:field="*{capacity}" th:placeholder="Capacity" type="number" required />
+                                        <input th:field="*{capacity}" th:placeholder="Capacity" type="number" min="1" required />
                                     </div><br/>
                                     <div >
                                         <label class="col-form-label col-md-4"  >Co- Owners:</label>
@@ -171,11 +179,11 @@
                                     </div><br/>
                                     <div >
                                         <label class="col-form-label col-md-4"  >Meet Start:</label>
-                                        <input th:field="*{meetStart}" type="time" required />
+                                        <input th:field="*{meetStart}" type="time" required min="now"/>
                                     </div><br/>
                                     <div >
                                         <label class="col-form-label col-md-4"  >Meet End:</label>
-                                        <input th:field="*{meetEnd}"  type="time" required />
+                                        <input th:field="*{meetEnd}"  type="time" required min="now" />
                                     </div><br/>
                                     <div >
                                         <label class="col-form-label col-md-4"  >Dates: </label>
@@ -227,7 +235,8 @@
 
     $('#dates').datepicker({
         multidate: true,
-        format: 'yyyy-mm-dd'
+        format: 'yyyy-mm-dd',
+        startDate: new Date()
     });
 </script>
 <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>

@@ -1,5 +1,9 @@
 package com.tracom.office_planner.Notifcations;
 
+/*
+Interface for all methods responsible to sending of the notifications
+ */
+
 import com.tracom.office_planner.Meeting.Meeting;
 import com.tracom.office_planner.User.User;
 

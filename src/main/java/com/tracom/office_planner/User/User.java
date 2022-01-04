@@ -1,5 +1,8 @@
 package com.tracom.office_planner.User;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import com.tracom.office_planner.Employee.Employee;
 import com.tracom.office_planner.Meeting.Meeting;
 import com.tracom.office_planner.Organization.Organization;
@@ -10,6 +13,10 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+
+/*
+Entity class for a user
+ */
 
 @Entity
 @Table(name = "user")
@@ -39,11 +46,14 @@ public class User {
     @OneToOne(cascade = CascadeType.ALL)
     private Employee employee;
 
+    @JsonBackReference
     @ManyToOne
     @JoinColumn(name = "organization_id")
     private Organization organization;
 
-    @ManyToMany(mappedBy = "users", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class,
+            property  = "meetId")
+    @ManyToMany(mappedBy = "users", fetch = FetchType.LAZY)
     private List<Meeting> meetings = new ArrayList<Meeting>();
 
     @Column(name = "account_unlocked", columnDefinition = "boolean default true")

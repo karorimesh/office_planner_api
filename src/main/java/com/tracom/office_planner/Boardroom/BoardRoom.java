@@ -1,9 +1,14 @@
 package com.tracom.office_planner.Boardroom;
 
+/* Entity class for the boardroom */
+
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import com.tracom.office_planner.Meeting.Meeting;
 import com.tracom.office_planner.Organization.Organization;
 import lombok.*;
-
 import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -29,7 +34,10 @@ public class BoardRoom {
     private String Others;
     @ManyToOne
     private Organization organization;
-    @OneToMany(mappedBy = "boardroom", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class,
+            property  = "meetId")
+//    @JsonBackReference
+    @OneToMany(mappedBy = "boardroom", cascade = CascadeType.PERSIST, fetch = FetchType.EAGER)
     private List<Meeting> meetings = new ArrayList<>();
 
     public BoardRoom(int board_id, String board_name) {

@@ -1,5 +1,9 @@
 package com.tracom.office_planner.User;
 
+/*
+Controller class for the users crud functions
+ */
+
 import com.azure.cosmos.implementation.guava25.collect.FluentIterable;
 import com.tracom.office_planner.MeetingsLog.PlannerLogger;
 import net.bytebuddy.utility.RandomString;
@@ -7,19 +11,18 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.repository.query.Param;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.ModelAndView;
-
 import javax.mail.MessagingException;
 import javax.servlet.http.HttpServletRequest;
 import java.io.UnsupportedEncodingException;
 import java.security.Principal;
-import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Controller
 public class UserController {
@@ -30,11 +33,13 @@ public class UserController {
 
 
 
+//    Return all users in an organization
     @GetMapping("/list_users")
     public String viewUsers(HttpServletRequest request,Model model){
         return viewUsersList(request,model, null,1,"userName","asc");
     }
 
+//    Return users based on search
     @GetMapping("/list_users/page/{page}")
     public String viewUsersList(HttpServletRequest request,Model model, @Param("keyword") String keyword,
                                 @PathVariable(name = "page") int page,
@@ -58,7 +63,7 @@ public class UserController {
         return "userManager";
     }
 
-
+//    Admin function to delete a user
     @RequestMapping(value = "/delete_user/{user_id}")
     public String deleteUser(@PathVariable(name = "user_id") int id, HttpServletRequest request) {
         Principal principal = request.getUserPrincipal();
@@ -70,10 +75,11 @@ public class UserController {
         return "redirect:/list_users";
     }
 
+//    Admin function to add a user
     @GetMapping("/add_user")
-    public String showAddUsersForm(Model model) {
+    public String showAddUsersForm(Model model, User user) {
 
-        model.addAttribute("user", new User());
+        model.addAttribute("user", user);
         return "createUser";
     }
 
@@ -91,14 +97,13 @@ public class UserController {
         try {
             us.setToken(token);
             us.setOrganization(user.getOrganization());
-            userRepo.save(us);
-            userService.sendRegisterMail(us,resetlink);
             PlannerLogger.createUser(us);
-            model.addAttribute("message", "Email sent Successfully");
+            userService.sendRegisterMail(us,resetlink);
             throw new MessagingException("Could not send email please check to ensure it's valid");
         }
         catch ( MessagingException e){
-            model.addAttribute("error",e.getMessage());
+            model.addAttribute("error","Could not send email please check to ensure it's valid");
+            userRepo.delete(us);
         }
         catch (DataIntegrityViolationException e){
             model.addAttribute("error","Email already exists");
@@ -107,10 +112,14 @@ public class UserController {
             e.printStackTrace();
         }
 
-        return "redirect:/add_user";
+        if(userRepo.findById(user.getUserId()) != null){
+            model.addAttribute("message", "Email sent successfully");
+        }
+
+        return showAddUsersForm(model,us);
     }
 
-
+//  User to edit their profile
     @PostMapping("/edited_profile")
     public String saveProfile(User user){
         user.setOrganization(userRepo.findById(user.getUserId()).get().getOrganization());
@@ -120,6 +129,7 @@ public class UserController {
         return "redirect:/?logout";
     }
 
+//    Admin function to edit a users details
     @PostMapping("/edited_user")
     public String saveEdited(User user){
         user.setOrganization(userRepo.findById(user.getUserId()).get().getOrganization());
@@ -129,6 +139,7 @@ public class UserController {
         return "redirect:/list_users";
     }
 
+//    Admin function to edit a user
     @RequestMapping("/edit_user/{user_id}")
     public ModelAndView userProfile(@PathVariable(name = "user_id") Integer user_id){
         ModelAndView modelAndView = new ModelAndView("editUser");
@@ -137,6 +148,7 @@ public class UserController {
         return modelAndView;
     }
 
+//    Current logged in user to view their profile
     @RequestMapping("/my_profile")
     public ModelAndView currentUser(HttpServletRequest request){
         ModelAndView modelAndView = new ModelAndView("editProfile");
@@ -147,6 +159,5 @@ public class UserController {
         return modelAndView;
         // TODO: 11/14/2021 Add nullpointerexception Handler here 
     }
-
 
 }

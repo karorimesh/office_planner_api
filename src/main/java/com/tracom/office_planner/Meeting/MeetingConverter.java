@@ -1,5 +1,8 @@
 package com.tracom.office_planner.Meeting;
 
+/* Converter class to persist multiple dates set for the meeting
+ */
+
 import com.tracom.office_planner.RepeatMeetings.RepeatMeetings;
 import org.springframework.core.convert.converter.Converter;
 

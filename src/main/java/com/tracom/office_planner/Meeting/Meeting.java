@@ -1,23 +1,21 @@
 package com.tracom.office_planner.Meeting;
 
+/*Entity to enable scheduling of a meeting */
+
+import com.fasterxml.jackson.annotation.*;
+import com.fasterxml.jackson.databind.annotation.JsonNaming;
 import com.tracom.office_planner.Boardroom.BoardRoom;
 import com.tracom.office_planner.Organization.Organization;
 import com.tracom.office_planner.RepeatMeetings.RepeatMeetings;
 import com.tracom.office_planner.User.User;
-import lombok.*;
-import org.springframework.format.annotation.DateTimeFormat;
-
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 import javax.persistence.*;
-import java.io.Serializable;
-import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
-/*import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.time.LocalTime;
-import java.util.List;
-import java.util.Set;*/
 
 
 @Entity
@@ -34,30 +32,32 @@ public class Meeting {
     private String meetName;
     private String description;
     private int capacity;
-    @ManyToMany(fetch = FetchType.LAZY, cascade = {CascadeType.PERSIST})
+    @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class,
+            property  = "userId")
+    @ManyToMany(fetch = FetchType.LAZY, cascade = {CascadeType.MERGE})
     @JoinTable(
             name = "user_meetings",
             joinColumns = @JoinColumn(name = "meet_id"),
             inverseJoinColumns = @JoinColumn(name = "user_id")
     )
     private List<User> users = new ArrayList<User>();
-    @ManyToOne(fetch = FetchType.EAGER, cascade = {CascadeType.PERSIST})
+    @ManyToOne(fetch = FetchType.LAZY, cascade = {CascadeType.MERGE})
     @JoinColumn(name = "room")
     private BoardRoom boardroom;
-    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY, mappedBy = "meeting")
-//    @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
-    private List<RepeatMeetings> repeatMeetings = new ArrayList<>();
-//    @DateTimeFormat(iso = DateTimeFormat.ISO.TIME)
+    @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class,
+    property = "repeatId")
+    @OneToMany(cascade = { CascadeType.PERSIST},orphanRemoval = true,  fetch = FetchType.LAZY, mappedBy = "meeting")
+    private List<RepeatMeetings> repeatMeetings ;
     private LocalTime meetStart;
-//    @DateTimeFormat(iso = DateTimeFormat.ISO.TIME)
     private LocalTime meetEnd;
     @ManyToOne(cascade = CascadeType.PERSIST)
     @JoinColumn(name = "organization")
     private Organization organization;
 
-
-    //Constructor without Id
-
+    public void setRepeatMeetings(List<RepeatMeetings> repeatMeetings) {
+        this.repeatMeetings = repeatMeetings;
+        repeatMeetings.forEach(r->r.setMeeting(this));
+    }
 
     @Override
     public String toString() {

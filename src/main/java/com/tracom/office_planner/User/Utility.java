@@ -1,5 +1,7 @@
 package com.tracom.office_planner.User;
 
+//Utility to generate a link to send to the user
+
 import javax.servlet.http.HttpServletRequest;
 
 public class Utility {

@@ -1,5 +1,9 @@
 package com.tracom.office_planner.Security;
 
+/*
+Class to carry out test on bcrypt encoding
+ */
+
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 public class EncoderDecoder {

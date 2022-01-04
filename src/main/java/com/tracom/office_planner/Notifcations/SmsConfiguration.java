@@ -12,7 +12,7 @@ import org.springframework.context.annotation.Configuration;
 @Getter
 @Setter
 
-//Twilio configuration
+//Twilio configuration to read the properties in the application.properties file
 @Configuration
 @ConfigurationProperties("twilio")
 @EnableConfigurationProperties

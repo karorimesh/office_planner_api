@@ -1,5 +1,7 @@
 package com.tracom.office_planner.User;
 
+//Controller to enable authentication o a user into the system
+
 
 import com.tracom.office_planner.MeetingsLog.PlannerLogger;
 import net.bytebuddy.utility.RandomString;
@@ -27,9 +29,8 @@ public class AuthController {
     private UserServiceClass serviceClass;
     @Autowired
     private UserRepository userRepository;
-    @Autowired
-    private UserPasswordRepository passwordRepository;
 
+//    Logged-out user requesting a password reset
     @GetMapping("/forgot")
     public String getPasswordForm(){
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
@@ -39,6 +40,7 @@ public class AuthController {
         return "redirect:/home";
     }
 
+//    Sending the reset link to the user
     @PostMapping("/forgot")
     public String sendResetEmail(HttpServletRequest request, Model model){
         String email = request.getParameter("email");
@@ -58,12 +60,16 @@ public class AuthController {
 
         return "forgot";
     }
+
+//    Providing the password reset form based on the users link
     @GetMapping("/reset")
     public String getResetForm(@Param("token") String token, Model model){
         User user = serviceClass.getUserByToken(token);
         model.addAttribute("token",token);
         return "forgotForm";
     }
+
+//    Resetting the users password
     @PostMapping("/reset")
     public String resetPassword(HttpServletRequest request, Model model){
         String token = request.getParameter("token");
@@ -93,6 +99,7 @@ public class AuthController {
         return "login";
     }
 
+//    New user setting their password
     @GetMapping("/register")
     public String registerUser(@Param("token") String token, Model model){
         model.addAttribute("token",token);
@@ -103,6 +110,7 @@ public class AuthController {
         return "redirect:/home";
     }
 
+//    Saving a new registered user details
     @PostMapping("/register")
     public String registration(HttpServletRequest request, Model model){
         String token = request.getParameter("token");

@@ -13,7 +13,7 @@ import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.List;
 
-//@SpringBootTest
+@SpringBootTest
 class OfficePlannerApplicationTests {
 
     @Autowired
@@ -30,7 +30,7 @@ class OfficePlannerApplicationTests {
         serviceClass.sendRegisterMail(user,"link");
     }
 
-//    @Test
+    @Test
     public void sendSms(){
         User user = new User();
         Meeting meeting = new Meeting();

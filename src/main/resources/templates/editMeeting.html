@@ -155,7 +155,7 @@
                                     </div><br/>
                                     <div >
                                         <label class="col-form-label col-md-4"  >Capacity:</label>
-                                        <input th:field="*{capacity}" th:placeholder="Capacity" type="number" required />
+                                        <input th:field="*{capacity}" th:placeholder="Capacity" type="number" min="1" required />
                                     </div><br/>
                                     <div >
                                         <label class="col-form-label col-md-4"  >Owners:</label>
@@ -221,6 +221,7 @@
     $('#datepicker').datepicker({
         showOtherMonths: true,
         format: 'yyyy-mm-dd'
+
     });
 </script>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.0/jquery.min.js"></script>
@@ -229,7 +230,8 @@
 
     $('#dates').datepicker({
         multidate: true,
-        format: 'yyyy-mm-dd'
+        format: 'yyyy-mm-dd',
+        startDate: new Date()
     });
 </script>
 <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
