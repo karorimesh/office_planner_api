@@ -2,10 +2,7 @@ package com.tracom.office_planner.Boardroom;
 
 /* Entity class for the boardroom */
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
-import com.fasterxml.jackson.annotation.JsonIdentityInfo;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
-import com.fasterxml.jackson.annotation.ObjectIdGenerators;
+import com.fasterxml.jackson.annotation.*;
 import com.tracom.office_planner.Meeting.Meeting;
 import com.tracom.office_planner.Organization.Organization;
 import lombok.*;
@@ -21,6 +18,8 @@ import java.util.List;
 @Getter
 @Setter
 
+//@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "boardId")
+@JsonIncludeProperties({"boardId", "boardName", "boardLocation", "Capacity", "TV", "Whiteboard", "Phone", "Others"})
 public class BoardRoom {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -34,8 +33,6 @@ public class BoardRoom {
     private String Others;
     @ManyToOne
     private Organization organization;
-    @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class,
-            property  = "meetId")
 //    @JsonBackReference
     @OneToMany(mappedBy = "boardroom", cascade = CascadeType.PERSIST, fetch = FetchType.EAGER)
     private List<Meeting> meetings = new ArrayList<>();

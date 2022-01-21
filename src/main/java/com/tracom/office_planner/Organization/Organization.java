@@ -1,6 +1,9 @@
 //Organization Entity to allow addition of more than one organization
 package com.tracom.office_planner.Organization;
 
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.JsonIncludeProperties;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import lombok.*;
 
 import javax.persistence.*;
@@ -15,6 +18,8 @@ import javax.persistence.*;
 @Entity
 @Table(name = "organization")
 
+//@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "organization_id")
+@JsonIncludeProperties({"organization_id","organization_name","organization_desc"})
 public class Organization {
     @Id
     private String organization_id;

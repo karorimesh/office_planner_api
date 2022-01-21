@@ -40,6 +40,11 @@ public interface BoardRepository extends JpaRepository<BoardRoom, Integer> {
     @Modifying
     @Query("UPDATE BoardRoom b SET b.boardName =?1, b.Capacity=?2, b.TV =?3, b.Phone =?4, b.Whiteboard = ?5, b.boardLocation = ?6, b.Others = ?7 WHERE b.boardId = ?8")
     void updateRoom(String boardName,int capacity, boolean TV,boolean phone,boolean whiteboard,String location,String others, int id);
+
+    @Query("FROM BoardRoom b WHERE b.boardId=?1 AND b.organization=?2")
+    BoardRoom findBoard(Integer id, Organization organization);
+
+
     /*
     End of Api Queries
      */

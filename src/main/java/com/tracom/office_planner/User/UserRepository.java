@@ -36,4 +36,7 @@ public interface UserRepository extends JpaRepository<User, Integer> {
 //    find users by their organization
     @Query("SELECT u FROM User u WHERE u.organization=?1")
     List<User> findUsers(Organization organization);
+
+    @Query("FROM User u WHERE u.userId=?1 AND u.organization=?2")
+    User findUserById(Integer id, Organization organization);
 }

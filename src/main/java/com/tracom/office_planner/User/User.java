@@ -1,8 +1,6 @@
 package com.tracom.office_planner.User;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
-import com.fasterxml.jackson.annotation.JsonIdentityInfo;
-import com.fasterxml.jackson.annotation.ObjectIdGenerators;
+import com.fasterxml.jackson.annotation.*;
 import com.tracom.office_planner.Employee.Employee;
 import com.tracom.office_planner.Meeting.Meeting;
 import com.tracom.office_planner.Organization.Organization;
@@ -25,11 +23,15 @@ Entity class for a user
 @NoArgsConstructor
 @Getter
 @Setter
+//@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property  = "id")
+@JsonIncludeProperties({"userId", "userName", "userPassword", "userRole", "token",
+"organization","accountUnlocked","failedAttempt","lockTime","enabled","phone"})
 public class User {
+//    @JsonProperty("id")
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-
     private int userId;
+
     @Column(unique = true)
     private String userName;
 
@@ -46,13 +48,9 @@ public class User {
     @OneToOne(cascade = CascadeType.ALL)
     private Employee employee;
 
-    @JsonBackReference
     @ManyToOne
     @JoinColumn(name = "organization_id")
     private Organization organization;
-
-    @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class,
-            property  = "meetId")
     @ManyToMany(mappedBy = "users", fetch = FetchType.LAZY)
     private List<Meeting> meetings = new ArrayList<Meeting>();
 
@@ -77,6 +75,7 @@ public class User {
     public User(int userId) {
         this.userId = userId;
     }
+
 
     public int getUserId() {
         return userId;

@@ -16,7 +16,7 @@ import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
 
-//@DataJpaTest
+@DataJpaTest
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
 @Rollback(value = false)
 public class MeetRepoTest {
@@ -51,6 +51,14 @@ public class MeetRepoTest {
         Assertions.assertThat(saveMeet.getMeetId()).isGreaterThan(0);
 //        Assertions.assertThat(saveRepeat).isNotNull();
 //        Assertions.assertThat(saveRepeat.getRepeat_id()).isGreaterThan(0);
+    }
+
+    @Test
+    public void deleteMeet(){
+        if(meetRepo.existsById(30)){
+            meetRepo.deleteById(30);
+        }
+        Assertions.assertThat(meetRepo.findById(30)).isNotPresent();
     }
 
 

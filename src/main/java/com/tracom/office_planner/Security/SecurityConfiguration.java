@@ -68,11 +68,14 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
         http    .sessionManagement().sessionCreationPolicy(STATELESS);
         http    .authorizeRequests()
                 /*API ant matchers*/
-                .antMatchers(HttpMethod.GET,"/api/meeting","/api/boardroom").authenticated()
+                .antMatchers(HttpMethod.GET,"/api/meeting/**","/api/meetings","/api/boardrooms","/api/boardroom/**",
+                        "/api/user/**","/api/users").authenticated()
                 .antMatchers(HttpMethod.POST,"/api/meeting/save").authenticated()
+                .antMatchers(HttpMethod.DELETE, "/api/meeting/delete/**").authenticated()
+                .antMatchers(HttpMethod.PUT, "/api/meeting/update/**","/api/user/edit/**").authenticated()
                 .antMatchers(HttpMethod.GET,"/api/user").hasAuthority("admin")
                 .antMatchers(HttpMethod.POST,"/api/user/save","/api/boardroom/save").hasAuthority("admin")
-                .antMatchers(HttpMethod.DELETE,"/api/boardroom/delete/**").hasAuthority("admin")
+                .antMatchers(HttpMethod.DELETE,"/api/boardroom/delete/**","/api/user/delete/**").hasAuthority("admin")
                 .antMatchers(HttpMethod.PUT,"/api/boardroom/edit/**").hasAuthority("admin")
                 /* End of API ant matchers */
                 /* Browser Ant matchers */

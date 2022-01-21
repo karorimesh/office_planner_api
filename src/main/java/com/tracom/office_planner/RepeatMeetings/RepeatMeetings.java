@@ -4,9 +4,7 @@ package com.tracom.office_planner.RepeatMeetings;
 Allows setting of multiple dates
  */
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
-import com.fasterxml.jackson.annotation.JsonIdentityInfo;
-import com.fasterxml.jackson.annotation.ObjectIdGenerators;
+import com.fasterxml.jackson.annotation.*;
 import com.tracom.office_planner.Meeting.Meeting;
 import lombok.*;
 
@@ -22,17 +20,13 @@ import java.time.LocalDate;
 
 @Entity
 @Table(name = "repeatMeetings")
-
+//@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "repeatId", resolver = SimpleObjectIdResolver.class)
+@JsonIncludeProperties({"repeatId", "meetDate"})
 public class RepeatMeetings {
-
-
         @Id
         @GeneratedValue(strategy = GenerationType.IDENTITY)
         private int repeatId;
         private LocalDate meetDate;
-//        @JsonBackReference
-//        @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class,
-//        property = "meetId")
         @ManyToOne(cascade = {CascadeType.PERSIST}, fetch = FetchType.LAZY)
         @JoinColumn(name = "meet_id")
         private Meeting meeting;

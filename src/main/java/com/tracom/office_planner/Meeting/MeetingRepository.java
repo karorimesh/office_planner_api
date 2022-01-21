@@ -16,4 +16,10 @@ public interface MeetingRepository extends JpaRepository<Meeting, Integer> {
      */
     @Query("SELECT m FROM Meeting m WHERE m.organization = ?1")
     List<Meeting> findMeets(Organization organization);
+
+    @Query("FROM Meeting m WHERE m.meetId=?1")
+    Meeting findMeet(int meetId);
+
+    @Query("FROM Meeting m WHERE m.meetId=?1 AND m.organization=?2")
+    Meeting findOrgMeet(Integer id, Organization organization);
 }

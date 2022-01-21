@@ -25,6 +25,11 @@ import java.util.List;
 @NoArgsConstructor
 @Getter
 @Setter
+
+//@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property  = "meetId")
+@JsonAutoDetect(fieldVisibility = JsonAutoDetect.Visibility.ANY)
+@JsonIncludeProperties({"meetId","meetName","meetStart","meetEnd","capacity","repeatMeetings"
+        ,"boardroom","users","organization"})
 public class Meeting {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -32,8 +37,6 @@ public class Meeting {
     private String meetName;
     private String description;
     private int capacity;
-    @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class,
-            property  = "userId")
     @ManyToMany(fetch = FetchType.LAZY, cascade = {CascadeType.MERGE})
     @JoinTable(
             name = "user_meetings",
@@ -44,8 +47,6 @@ public class Meeting {
     @ManyToOne(fetch = FetchType.LAZY, cascade = {CascadeType.MERGE})
     @JoinColumn(name = "room")
     private BoardRoom boardroom;
-    @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class,
-    property = "repeatId")
     @OneToMany(cascade = { CascadeType.PERSIST},orphanRemoval = true,  fetch = FetchType.LAZY, mappedBy = "meeting")
     private List<RepeatMeetings> repeatMeetings ;
     private LocalTime meetStart;
