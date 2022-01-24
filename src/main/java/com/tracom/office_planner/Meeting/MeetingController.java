@@ -72,52 +72,21 @@ public class MeetingController {
         public String viewMeetList(HttpServletRequest request,Model model, @Param("keyword") String keyword,
                                     @PathVariable(name = "page") int page,
                                     @Param("field") String field, @Param("dir") String dir) {
-            Principal principal = request.getUserPrincipal();
-            User user = userRepository.findUserByName(principal.getName());
-            Page<RepeatMeetings> content = serviceClass.listAll(keyword,page,dir,field, user.getOrganization());
-            List<RepeatMeetings> listMeet = content.getContent();
-            model.addAttribute("meetings", listMeet);
-            model.addAttribute("keyword",keyword);
-            model.addAttribute("currentPage", page);
-            model.addAttribute("totalPages", content.getTotalPages());
-            model.addAttribute("totalUsers",content.getTotalElements());
-            model.addAttribute("sortDir", dir);
-            model.addAttribute("sortField",field);
-            model.addAttribute("reverseDir",dir.equals("asc")?"desc":"asc");
+            serviceClass.viewMeetList(request, keyword, page, dir, field, model);
             return "scheduled";
         }
         @GetMapping("/my_meeting/page/{page}")
         public String viewMyMeetList(HttpServletRequest request,Model model, @Param("keyword") String keyword,
                                     @PathVariable(name = "page") int page,
                                     @Param("field") String field, @Param("dir") String dir) {
-            Principal principal = request.getUserPrincipal();
-            User user = userRepository.findUserByName(principal.getName());
-            Page<RepeatMeetings> content = serviceClass.listAll(keyword,page,dir,field, user.getOrganization());
-            List<RepeatMeetings> listMeet = content.getContent();
-            List<RepeatMeetings> listMeets = FluentIterable
-                    .from(listMeet)
-                            .filter(l -> l.getMeeting().getUsers().contains(user))
-                    .toList();
-            model.addAttribute("meetings", listMeets);
-            model.addAttribute("keyword",keyword);
-            model.addAttribute("currentPage", page);
-            model.addAttribute("totalPages", content.getTotalPages());
-            model.addAttribute("totalUsers",content.getTotalElements());
-            model.addAttribute("sortDir", dir);
-            model.addAttribute("sortField",field);
-            model.addAttribute("reverseDir",dir.equals("asc")?"desc":"asc");
+            serviceClass.viewMyMeetList(request, keyword, page, dir, field, model);
             return "scheduled";
         }
 
 
         @RequestMapping(value = "/delete_meet/{repeatId}")
         public String deleteMeet(@PathVariable(name = "repeatId") int id, HttpServletRequest request) {
-            Principal principal = request.getUserPrincipal();
-            String name = principal.getName();
-            User user = userRepository.findUserByName(name);
-            Meeting meeting = meetingsRepo.getById(id).getMeeting();
-            PlannerLogger.deleteMeeting(meeting, user);
-            meetingsRepo.deleteById(id);
+            serviceClass.deleteMeet(request, id);
             return "redirect:/meeting";
         }
 
@@ -132,17 +101,7 @@ public class MeetingController {
 
         @GetMapping("/new_meet")
         public String meetingForm(Model model, HttpServletRequest request, Meeting meeting) {
-            Principal principal = request.getUserPrincipal();
-            String name = principal.getName();
-            User user = userRepository.findUserByName(name);
-            List<BoardRoom> boards = boardRepository.findBoards(user.getOrganization());
-            List<User> usersList = userRepository.findUsers(user.getOrganization());
-            List<User> users = FluentIterable.from(usersList)
-                            .filter(u -> u != user)
-                                    .toList();
-            model.addAttribute("meet", meeting);
-            model.addAttribute("board",boards);
-            model.addAttribute("users",users);
+            serviceClass.meetingForm(request,model,meeting);
             return "createMeeting";
         }
 
@@ -150,51 +109,21 @@ public class MeetingController {
         @PostMapping("/save_meet")
         public String saveNewMeet(Meeting meet, HttpServletRequest request, Model model) {
             // TODO: 11/4/2021 Add Creators ID in the save
-            Principal principal = request.getUserPrincipal();
-            String name = principal.getName();
-            User user = userRepository.findUserByName(name);
-            meet.setOrganization(user.getOrganization());
-            meet.getUsers().add(user);
-            meet.getRepeatMeetings().forEach(r->r.setMeeting(meet));
-            List<RepeatMeetings> meetings = meet.getRepeatMeetings();
-//            Check for any conflicting meeting
-            for (RepeatMeetings r : meetings){
-                if(meetingsRepo.findConflictingMeet(meet.getBoardroom(), r.getMeetDate(),meet.getMeetStart()) != null){
-                    model.addAttribute("error","This boardroom will be busy at this time! contact an admin for a reschedule or check the calendar for available time");
-                    return meetingForm(model,request,meet);
-                }
-            }
-            PlannerLogger.createMeeting(meet,user);
-            meetRepo.save(meet);
-            return "redirect:/my_meeting";
+            serviceClass.saveNewMeet(meet,request,model);
+            return meetingForm(model, request,meet);
 
         }
 
         @PostMapping("/meet_edited")
         public String saveEditedMeet(Meeting meet, HttpServletRequest request) {
-            // TODO: 11/4/2021 Add Creators ID in the save
-            Principal principal = request.getUserPrincipal();
-            String name = principal.getName();
-            User user = userRepository.findUserByName(name);
-            meet.setOrganization(user.getOrganization());
-            meet.getRepeatMeetings().forEach(r->r.setMeeting(meet));
-            meetRepo.save(meet);
-            PlannerLogger.updateMeeting(meet,user);
+            serviceClass.saveEditedMeet(request, meet);
             return "redirect:meeting";
         }
 
         @RequestMapping("/reschedule/{meet_id}")
         public ModelAndView showEditUserForm(HttpServletRequest request,@PathVariable(name = "meet_id") Integer id, Model model) {
-            Principal principal = request.getUserPrincipal();
-            String name = principal.getName();
-            User user = userRepository.findUserByName(name);
-            List<BoardRoom> boards = boardRepository.findBoards(user.getOrganization());
-            List<User> users = userRepository.findUsers(user.getOrganization());
             ModelAndView mnv = new ModelAndView("editMeeting");
-            Meeting m = meetRepo.getById(id);
-            model.addAttribute("board",boards);
-            model.addAttribute("users",users);
-            mnv.addObject("meet", m);
+            serviceClass.showEdit(request,mnv,model,id);
             return mnv;
         }
 

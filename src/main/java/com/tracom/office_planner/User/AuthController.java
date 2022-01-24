@@ -1,6 +1,8 @@
 package com.tracom.office_planner.User;
 
-//Controller to enable authentication o a user into the system
+/**
+ * Controller to enable authentication o a user into the system
+ */
 
 
 import com.tracom.office_planner.MeetingsLog.PlannerLogger;
@@ -25,14 +27,21 @@ import java.util.List;
 
 @Controller
 public class AuthController {
-    @Autowired
-    private UserServiceClass serviceClass;
-    @Autowired
-    private UserRepository userRepository;
 
-//    Logged-out user requesting a password reset
+    private final UserServiceClass serviceClass;
+    private final UserRepository userRepository;
+
+    @Autowired
+    public AuthController(UserServiceClass serviceClass, UserRepository userRepository) {
+        this.serviceClass = serviceClass;
+        this.userRepository = userRepository;
+    }
+
+    /*
+    Logged-out user requesting a password reset
+    */
     @GetMapping("/forgot")
-    public String getPasswordForm(){
+    public String getPasswordForm(Model model){
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         if(authentication == null || authentication instanceof AnonymousAuthenticationToken){
             return "forgot";
@@ -40,66 +49,37 @@ public class AuthController {
         return "redirect:/home";
     }
 
-//    Sending the reset link to the user
+/*
+Sending the reset link to the user
+ */
     @PostMapping("/forgot")
     public String sendResetEmail(HttpServletRequest request, Model model){
-        String email = request.getParameter("email");
-        String token = RandomString.make(10);
-        // TODO: 10/27/2021 Add try and catch method here to handle error
-        User user = userRepository.findByEmail(email);
-        if(user != null){
-            serviceClass.updateToken(token,email);
-            String resetlink = Utility.getSiteUrl(request) +"/reset?token="+token;
-            serviceClass.sendForgotMail(user,resetlink);
-            PlannerLogger.resetPasswordRequest(user);
-            System.out.println(resetlink);
-        }
-        else{
-            model.addAttribute("error", "Email does not exist");
-        }
-
-        return "forgot";
+        // TODO: 1/24/2022 Update view to take a message
+        serviceClass.sendResetMail(request,model);
+        return getPasswordForm(model);
     }
 
-//    Providing the password reset form based on the users link
+/*
+ Providing the password reset form based on the users link
+ */
     @GetMapping("/reset")
     public String getResetForm(@Param("token") String token, Model model){
-        User user = serviceClass.getUserByToken(token);
         model.addAttribute("token",token);
         return "forgotForm";
     }
 
-//    Resetting the users password
+/*
+Resetting the users password
+ */
     @PostMapping("/reset")
     public String resetPassword(HttpServletRequest request, Model model){
-        String token = request.getParameter("token");
-        String password = request.getParameter("password");
-        String encodedPassword = new BCryptPasswordEncoder().encode(password);
-        try {
-            User user = serviceClass.getUserByToken(token);
-            List<UserPassword> userPasswords = user.getUserPasswords();
-            List<String> passwords = new ArrayList<>();
-            Collections.reverse(userPasswords);
-            userPasswords.subList(1,4);
-            userPasswords.forEach(up -> {
-                passwords.add(up.getUserPassword());
-            });
-            if (passwords.contains(encodedPassword)){
-                model.addAttribute("error", "Use a password you've not used before");
-                return getResetForm(token,model);
-            }else {
-                serviceClass.updatePassword(user,password);
-                PlannerLogger.resetSuccess(user);
-            }
-            throw new UsernameNotFoundException("User does not exist");
-        } catch(UsernameNotFoundException e){
-            model.addAttribute("error",e.getMessage());
-        }
-        // TODO: 10/27/2021 Add try catch for invalid token
-        return "login";
+        serviceClass.resetPassword(request,model);
+        return getResetForm(request.getParameter("token"),model);
     }
 
-//    New user setting their password
+/*
+ New user setting their password
+ */
     @GetMapping("/register")
     public String registerUser(@Param("token") String token, Model model){
         model.addAttribute("token",token);
@@ -110,7 +90,9 @@ public class AuthController {
         return "redirect:/home";
     }
 
-//    Saving a new registered user details
+/*
+Saving a new registered user details
+ */
     @PostMapping("/register")
     public String registration(HttpServletRequest request, Model model){
         String token = request.getParameter("token");
@@ -126,6 +108,6 @@ public class AuthController {
             model.addAttribute("error","This user name is taken");
         }
 
-        return "register";
+        return registerUser(request.getParameter("token"),model);
     }
 }

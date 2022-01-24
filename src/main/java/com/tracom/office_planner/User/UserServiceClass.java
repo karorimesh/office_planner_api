@@ -4,6 +4,7 @@ package com.tracom.office_planner.User;
 Login for user management and notifications
  */
 
+import com.azure.cosmos.implementation.guava25.collect.FluentIterable;
 import com.tracom.office_planner.Meeting.Meeting;
 import com.tracom.office_planner.MeetingsLog.PlannerLogger;
 import com.tracom.office_planner.Notifcations.SendNotification;
@@ -12,7 +13,9 @@ import com.tracom.office_planner.Organization.Organization;
 import com.twilio.rest.api.v2010.account.Message;
 import com.twilio.rest.api.v2010.account.MessageCreator;
 import com.twilio.type.PhoneNumber;
+import net.bytebuddy.utility.RandomString;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -25,14 +28,18 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.ui.Model;
+import org.springframework.web.servlet.ModelAndView;
 
 import javax.mail.MessagingException;
 import javax.mail.internet.MimeMessage;
+import javax.servlet.http.HttpServletRequest;
 import javax.transaction.Transactional;
 import java.io.UnsupportedEncodingException;
+import java.security.Principal;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 @Transactional
@@ -76,11 +83,10 @@ public class UserServiceClass implements SendNotification {
                 +"<p>Regards</p>";
         helper.setSubject(subject);
         helper.setText(content,true);
-        userRepository.save(user);
         mailSender.send(registerMessage);
     }
 
-//    Email notification for user to enable them to reser their password
+//    Email notification for user to enable them to reset their password
     @Override
     public void sendForgotMail(User user, String reset) {
         SimpleMailMessage message = new SimpleMailMessage();
@@ -219,5 +225,180 @@ public class UserServiceClass implements SendNotification {
             return true;
         }
         return false;
+    }
+
+/*
+     Forgot email
+ */
+    public void sendResetMail(HttpServletRequest request, Model model){
+        String email = request.getParameter("email");
+        String token = RandomString.make(10);
+        User user = userRepository.findByEmail(email);
+        if(user != null){
+            updateToken(token,email);
+            String resetLink = Utility.getSiteUrl(request) +"/reset?token="+token;
+            sendForgotMail(user,resetLink);
+            PlannerLogger.resetPasswordRequest(user);
+            System.out.println(resetLink);
+            model.addAttribute("message", "Check email for reset link");
+        }
+        else{
+            model.addAttribute("error", "Email does not exist");
+        }
+    }
+
+    /*
+     Reset Password
+     */
+    public  void resetPassword( HttpServletRequest request, Model model){
+        String token = request.getParameter("token");
+        String password = request.getParameter("password");
+        String encodedPassword = new BCryptPasswordEncoder().encode(password);
+        try {
+            User user =getUserByToken(token);
+            List<UserPassword> userPasswords = user.getUserPasswords();
+            List<String> passwords = new ArrayList<>();
+            Collections.reverse(userPasswords);
+            userPasswords.subList(1,4);
+            userPasswords.forEach(up -> {
+                passwords.add(up.getUserPassword());
+            });
+            if (passwords.contains(encodedPassword)){
+                model.addAttribute("error", "Use a password you've not used before");
+            }else {
+                updatePassword(user,password);
+                PlannerLogger.resetSuccess(user);
+                model.addAttribute("message", "Password changed successfully Login" );
+            }
+            throw new UsernameNotFoundException("User does not exist");
+        } catch(UsernameNotFoundException e){
+            model.addAttribute("error",e.getMessage());
+        }
+    }
+    /*
+    Registration
+     */
+    public void registration(HttpServletRequest request, Model model){
+        String token = request.getParameter("token");
+        User user = getUserByToken(token);
+        String username = request.getParameter("username");
+        String password = request.getParameter("password");
+        String phone = request.getParameter("phone");
+        try{
+            updateUser(user,username,password,phone);
+            PlannerLogger.firstUserUpdate(user);
+            model.addAttribute("message", "Successfully registered click Login to enter");
+        }catch (DataIntegrityViolationException e){
+            model.addAttribute("error","This user name is taken");
+        }
+    }
+
+    /*
+    A paginated users list
+     */
+    public void viewUsersList(HttpServletRequest request, String keyword, int page, String dir, String field, Model model){
+        Principal principal = request.getUserPrincipal();
+        String name = principal.getName();
+        User currentUser = userRepository.findUserByName(name);
+        Page<User> content =listAll(keyword,page,dir,field, currentUser.getOrganization());
+        List<User> listUser = content.getContent();
+        List<User> listUsers = FluentIterable.from(listUser)
+                .filter(u -> u != currentUser)
+                .toList();
+        model.addAttribute("userList", listUsers);
+        model.addAttribute("keyword",keyword);
+        model.addAttribute("currentPage", page);
+        model.addAttribute("totalPages", content.getTotalPages());
+        model.addAttribute("totalUsers",content.getTotalElements());
+        model.addAttribute("sortDir", dir);
+        model.addAttribute("sortField",field);
+        model.addAttribute("reverseDir",dir.equals("asc")?"desc":"asc");
+    }
+
+    /*
+Admin function to delete a user
+ */
+    public void deleteUser(HttpServletRequest request, int id){
+        Principal principal = request.getUserPrincipal();
+        String name = principal.getName();
+        User user = userRepository.findUserByName(name);
+        User deletedUser = userRepository.getById(id);
+        PlannerLogger.deleteUser(deletedUser,user);
+        userRepository.deleteById(id);
+    }
+
+/*
+    Create a new user function
+*/
+    public void saveNewUser(HttpServletRequest request, User us, Model model){
+        String token = RandomString.make(10);
+        String resetLink = Utility.getSiteUrl(request)+"/register?token="+token;
+        System.out.println(resetLink);
+        Principal principal = request.getUserPrincipal();
+        String name = principal.getName();
+        User user = userRepository.findUserByName(name);
+        try {
+            us.setToken(token);
+            us.setOrganization(user.getOrganization());
+            PlannerLogger.createUser(us);
+            sendRegisterMail(us,resetLink);
+            throw new MessagingException("Could not send email please check to ensure it's valid");
+        }
+        catch ( MessagingException e){
+            model.addAttribute("error","Could not send email please check to ensure it's valid");
+            userRepository.delete(us);
+        }
+        catch (DataIntegrityViolationException e){
+            model.addAttribute("error","Email already exists");
+        }
+        catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+        }
+
+        if(userRepository.findById(user.getUserId()).isPresent()){
+            model.addAttribute("message", "Email sent successfully");
+        }
+    }
+
+/*
+User to edit their profile
+ */
+    public void saveProfile( User user){
+        user.setOrganization(userRepository.findById(user.getUserId()).get().getOrganization());
+        user.setUserPassword(userRepository.findById(user.getUserId()).get().getUserPassword());
+        userRepository.save(user);
+        PlannerLogger.updateUser(user);
+    }
+
+/*
+Admin function to edit a users details
+ */
+    public void saveEdited(User user){
+        user.setOrganization(userRepository.findById(user.getUserId()).get().getOrganization());
+        user.setUserPassword(userRepository.findById(user.getUserId()).get().getUserPassword());
+        userRepository.save(user);
+        PlannerLogger.updateUser(user);
+    }
+
+/*
+ Admin function to edit a user
+ */
+    public ModelAndView userProfile( int userId){
+        ModelAndView modelAndView = new ModelAndView("editUser");
+        User user = userRepository.getById(userId);
+        modelAndView.addObject("profile",user);
+        return modelAndView;
+    }
+
+/*
+Current logged in user to view their profile
+ */
+    public ModelAndView currentUser(HttpServletRequest request){
+        ModelAndView modelAndView = new ModelAndView("editProfile");
+        Principal principal = request.getUserPrincipal();
+        String name = principal.getName();
+        User user = userRepository.findUserByName(name);
+        modelAndView.addObject("profile", user);
+        return modelAndView;
     }
 }

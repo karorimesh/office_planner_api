@@ -24,7 +24,7 @@ Entity class for a user
 @Getter
 @Setter
 //@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property  = "id")
-@JsonIncludeProperties({"userId", "userName", "userPassword", "userRole", "token",
+@JsonIncludeProperties({"userId", "userName", "userEmail", "userPassword", "userRole", "token",
 "organization","accountUnlocked","failedAttempt","lockTime","enabled","phone"})
 public class User {
 //    @JsonProperty("id")
@@ -48,7 +48,7 @@ public class User {
     @OneToOne(cascade = CascadeType.ALL)
     private Employee employee;
 
-    @ManyToOne
+    @ManyToOne(cascade = {CascadeType.MERGE})
     @JoinColumn(name = "organization_id")
     private Organization organization;
     @ManyToMany(mappedBy = "users", fetch = FetchType.LAZY)

@@ -24,16 +24,13 @@ import com.tracom.office_planner.ProjectServiceClass;
 import com.tracom.office_planner.RepeatMeetings.RepeatMeetings;
 import com.tracom.office_planner.RepeatMeetings.RepeatMeetingsRepo;
 import com.tracom.office_planner.User.*;
-import lombok.RequiredArgsConstructor;
 import net.bytebuddy.utility.RandomString;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.ui.Model;
 import org.springframework.util.MimeTypeUtils;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
@@ -57,40 +54,51 @@ public class ApiController {
     private  final OrganizationRepo organizationRepo;
     private  final UserRepository userRepo;
     private final BoardRepository boardRepository;
-    private final BoardServiceClass serviceClass;
+    private final BoardServiceClass boardServiceClass;
     private final MeetingRepository meetRepo;
     private final RepeatMeetingsRepo meetingsRepo;
     private final ProjectServiceClass projectServiceClass;
     private final UserServiceClass userServiceClass;
+    private final ApiServiceClass apiServiceClass;
 
 
     @Autowired
-    public ApiController(UserServiceClass userServiceClass,OrganizationRepo organizationRepo, UserRepository userRepo, BoardRepository boardRepository, BoardServiceClass serviceClass, MeetingRepository meetRepo, RepeatMeetingsRepo meetingsRepo, ProjectServiceClass projectServiceClass) {
+    public ApiController(ApiServiceClass apiServiceClass, UserServiceClass userServiceClass, OrganizationRepo organizationRepo, UserRepository userRepo, BoardRepository boardRepository, BoardServiceClass boardServiceClass, MeetingRepository meetRepo, RepeatMeetingsRepo meetingsRepo, ProjectServiceClass projectServiceClass) {
         this.userServiceClass = userServiceClass;
         this.organizationRepo = organizationRepo;
         this.userRepo = userRepo;
         this.boardRepository = boardRepository;
-        this.serviceClass = serviceClass;
+        this.boardServiceClass = boardServiceClass;
         this.meetRepo = meetRepo;
         this.meetingsRepo = meetingsRepo;
         this.projectServiceClass = projectServiceClass;
+        this.apiServiceClass = apiServiceClass;
     }
 
 
 
     //    ORGANIZATION CONTROLLER
 //    Get all organizations in the Database
-    @GetMapping("/org")
-    ResponseEntity<List<Organization>> getOrganizations(){
-        return ResponseEntity.ok().body(organizationRepo.findAll());
-    }
 
 //    Save a new organization
     @PostMapping("/org/save")
-    ResponseEntity<Organization> saveOrganization( @RequestBody Organization organization, @RequestBody User user){
-        URI uri = URI.create(ServletUriComponentsBuilder.fromCurrentContextPath().path("/api/org/save").toUriString());
+    ResponseEntity<String> saveOrganization( HttpServletRequest request,@RequestBody User user){
 
-        return ResponseEntity.created(uri).body(organizationRepo.save(organization));
+        try {
+            apiServiceClass.saveOrganization(request,user,user.getOrganization());
+            return ResponseEntity.status(HttpStatus.CREATED).body("Organization has been added admin has received registration email");
+        }
+        catch ( MessagingException e){
+            userRepo.delete(user);
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Could not send mail, please ensure it's valid");
+        }
+        catch (DataIntegrityViolationException e){
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("User already exists!!");
+        }
+        catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
+        }
     }
 
 //    END OF ORGANIZATION CONTROLLER
@@ -231,6 +239,7 @@ public class ApiController {
             newUser.setToken(token);
             newUser.setOrganization(currentUser.getOrganization());
             PlannerLogger.createUser(newUser);
+            userRepo.save(newUser);
             userServiceClass.sendRegisterMail(newUser,registerLink);
             return ResponseEntity.status(HttpStatus.CREATED).body("User has been saved successfully");
         }
@@ -275,7 +284,8 @@ public class ApiController {
     }
 
     @PostMapping("user/forgot")
-    public ResponseEntity<String> sendResetEmail(HttpServletRequest request, @RequestBody String email){
+    public ResponseEntity<String> sendResetEmail(HttpServletRequest request, @RequestBody User forgotUser){
+        String email = forgotUser.getUserEmail();
         String token = RandomString.make(10);
         // TODO: 10/27/2021 Add try and catch method here to handle error
         User user = userRepo.findByEmail(email);
@@ -294,22 +304,22 @@ public class ApiController {
 
 
     //    Resetting the users password
-    @PostMapping("/reset")
+    @PostMapping("user/reset")
     public ResponseEntity<String> resetPassword(HttpServletRequest request, @RequestBody User user){
         String encodedPassword = new BCryptPasswordEncoder().encode(user.getUserPassword());
         try {
             User forgotUser = userServiceClass.getUserByToken(user.getToken());
-            List<UserPassword> userPasswords = user.getUserPasswords();
-            List<String> passwords = new ArrayList<>();
-            Collections.reverse(userPasswords);
-            userPasswords.subList(1,4);
-            userPasswords.forEach(up -> {
-                passwords.add(up.getUserPassword());
-            });
-            if (passwords.contains(encodedPassword)){
+//            List<UserPassword> userPasswords = user.getUserPasswords();
+//            List<String> passwords = new ArrayList<>();
+//            Collections.reverse(userPasswords);
+//            userPasswords.subList(1,4);
+//            userPasswords.forEach(up -> {
+//                passwords.add(up.getUserPassword());
+//            });
+            if (userRepo.findUserByName(forgotUser.getUserName()) == null){
                 return ResponseEntity.badRequest().body("Use a password you have never used before");
             }else {
-                userServiceClass.updatePassword(user, user.getUserPassword());
+                userServiceClass.updatePassword(forgotUser, user.getUserPassword());
                 PlannerLogger.resetSuccess(user);
                 return ResponseEntity.badRequest().body("User password changed successfully you can login now");
             }
@@ -321,7 +331,7 @@ public class ApiController {
 
 
     //    Saving a new registered user details
-    @PostMapping("/register")
+    @PostMapping("user/register")
      ResponseEntity<String> registration(HttpServletRequest request, @RequestBody User user){
         User newUser = userServiceClass.getUserByToken(user.getToken());
         try{

@@ -44,36 +44,17 @@ public class BoardroomController {
         public String viewBoardsList(Model model, HttpServletRequest request, @Param("keyword") String keyword,
                                     @PathVariable(name = "page") int page,
                                     @Param("field") String field, @Param("dir") String dir) {
-            Principal principal = request.getUserPrincipal();
-            String name = principal.getName();
-            User user = userRepository.findUserByName(name);
-            Page<BoardRoom> content = serviceClass.pageAll(keyword,page,dir,field, user.getOrganization());
-            List<BoardRoom> listBoards = content.getContent();
-            // TODO: 11/16/2021 Filter Boards to the user, also add ant matchers to spring security
-            model.addAttribute("board", listBoards);
-            model.addAttribute("keyword",keyword);
-            model.addAttribute("currentPage", page);
-            model.addAttribute("totalPages", content.getTotalPages());
-            model.addAttribute("totalBoards",content.getTotalElements());
-            model.addAttribute("sortDir", dir);
-            model.addAttribute("sortField",field);
-            model.addAttribute("reverseDir",dir.equals("asc")?"desc":"asc");
+            serviceClass.viewBoardsList(request, keyword, page, dir, field, model);
             return "boardrooms";
         }
         @RequestMapping("/delete_board/{board_id}")
         public String deleteBoard(@PathVariable(name = "board_id") int id, HttpServletRequest request) {
-            Principal principal = request.getUserPrincipal();
-            String name = principal.getName();
-            User user = userRepository.findUserByName(name);
-            BoardRoom boardRoom = boardRepository.getById(id);
-            PlannerLogger.deleteBoardroom(boardRoom,user);
-            boardRepository.deleteById(id);
+            serviceClass.deleteBoard(request, id);
             return "/boardroom";
         }
 
         @GetMapping("/new_board")
         public String boardForm(Model model) {
-
             BoardRoom boardRoom = new BoardRoom();
             model.addAttribute("board", boardRoom);
             return "boardroom";
@@ -81,24 +62,14 @@ public class BoardroomController {
 
         @PostMapping("/save_board")
         public String saveNewBoard(BoardRoom boardRoom, HttpServletRequest request) {
-            Principal principal = request.getUserPrincipal();
-            String name = principal.getName();
-            User user = userRepository.findUserByName(name);
-            boardRoom.setOrganization(user.getOrganization());
-            boardRepository.save(boardRoom);
-            PlannerLogger.createBoardroom(boardRoom,user);
+            serviceClass.saveNewBoard(request, boardRoom);
             return "redirect:/boardroom";
 
         }
 
         @PutMapping("/edited_board")
         public String saveEditedBoard(BoardRoom boardRoom, HttpServletRequest request) {
-            Principal principal = request.getUserPrincipal();
-            String name = principal.getName();
-            User user = userRepository.findUserByName(name);
-            boardRoom.setOrganization(user.getOrganization());
-            boardRepository.save(boardRoom);
-            PlannerLogger.editBoardroom(boardRoom,user);
+            serviceClass.editedBoard(request, boardRoom);
             return "redirect:/boardroom";
 
         }
